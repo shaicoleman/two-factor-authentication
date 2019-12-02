@@ -7,7 +7,7 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.1.4'
+gem 'rails', '~> 5.2.3'
 # Use pg as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
@@ -53,8 +53,8 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem 'administrate', '~> 0.8.1'
-gem 'devise', '~> 4.3.0'
+gem 'administrate'
+gem 'devise', '< 5'
 gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
 gem 'devise_masquerade', '~> 0.6.0'
 gem 'font-awesome-sass', '~> 4.7'
