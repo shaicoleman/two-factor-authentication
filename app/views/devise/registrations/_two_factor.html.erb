@@ -16,7 +16,13 @@
     </div>
 
     <div class="col-4 text-center">
-      <%= current_user.otp_qr_code.html_safe %>
+      <%= OtpService.otp_qr_code(user: current_user) %>
+    </div>
+
+    <div class="text-center">
+      Can't scan the code?
+
+      Secret key: <b><%= OtpService.format_otp_secret(user: current_user) %></b>
     </div>
   </div>
 

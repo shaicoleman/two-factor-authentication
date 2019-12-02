@@ -2,10 +2,13 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   # Devise
-  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks", sessions: "users/sessions" }
+  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks",
+                                    sessions: "users/sessions" }
+
   devise_scope :user do
-    scope :users, as: :users do
-      post 'pre_otp', to: 'users/sessions#pre_otp'
+    scope controller: 'users/otp_sessions' do
+      get   '/users/sign_in/otp', action: :new, as: :new_user_otp_session
+      post  '/users/sign_in/otp', action: :create, as: :user_otp_session
     end
   end
 

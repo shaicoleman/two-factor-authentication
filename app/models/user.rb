@@ -1,5 +1,9 @@
 class User < ApplicationRecord
-  devise :two_factor_authenticatable, :two_factor_backupable, :otp_secret_encryption_key => Rails.application.secrets.otp_key
+  devise :two_factor_authenticatable, otp_secret_encryption_key: Rails.application.secrets.otp_key,
+         otp_allowed_drift: 30, otp_secret_length: 32
+
+  devise :two_factor_backupable, otp_backup_code_length: 16, otp_number_of_backup_codes: 5
+
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -8,10 +12,8 @@ class User < ApplicationRecord
   has_many :notifications, foreign_key: :recipient_id
   has_many :services
 
-  def otp_qr_code
-    issuer = 'GoRails'
-    label = "#{issuer}:#{email}"
-    qrcode = RQRCode::QRCode.new(otp_provisioning_uri(label, issuer: issuer))
-    qrcode.as_svg(module_size: 4)
+  # OTP will be checked through the controler
+  def otp_required_for_login
+    false
   end
 end
