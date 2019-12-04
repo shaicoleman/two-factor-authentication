@@ -1,6 +1,5 @@
 class OtpForm
-  include ActiveModel::Conversion
-  include ActiveModel::Validations
+  include ActiveModel::Model
 
   attr_accessor :otp_attempt
   attr_accessor :remember_me

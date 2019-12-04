@@ -2,7 +2,7 @@
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
     <h1 class="text-center">Log in</h1>
 
-    <%= simple_form_for(@otp_form, url: user_otp_session_path, method: :post, html: { id: "step-2" } ) do |f| %>
+    <%= simple_form_for(@otp_form, url: user_otp_session_path, html: { id: "step-2" } ) do |f| %>
       <div class="form-group">
         <%= f.text_field :otp_attempt, autocomplete: "off", placeholder: '2FA Code', class: 'form-control', id: "step-2-otp" %>
       </div>
