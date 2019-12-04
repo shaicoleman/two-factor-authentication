@@ -15,10 +15,13 @@ class Users::OtpSessionsController < Devise::SessionsController
     @otp_form = OtpForm.new
     @otp_form.otp_attempt = params[:otp_form].require(:otp_attempt)
 
-    set_flash_message!(:notice, :signed_in)
     self.resource = User.find_by(id: session[:otp_user_id])
+    return redirect_to(new_user_session_path) unless self.resource.present?
+
     sign_out
     sign_in(resource_name, resource)
+    set_flash_message!(:notice, :signed_in)
+
     respond_with resource, location: after_sign_in_path_for(resource)
   end
 

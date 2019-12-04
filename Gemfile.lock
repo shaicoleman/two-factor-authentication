@@ -73,6 +73,7 @@ GEM
       encryptor (~> 3.0.0)
     autoprefixer-rails (9.7.3)
       execjs
+    awesome_print (1.8.0)
     bcrypt (3.1.13)
     bindex (0.8.1)
     bootstrap (4.0.0)
@@ -324,6 +325,7 @@ PLATFORMS
 
 DEPENDENCIES
   administrate
+  awesome_print
   bootstrap (~> 4.0.0.beta)
   byebug
   capybara (~> 2.13)
