@@ -20,7 +20,7 @@ class Users::OtpSessionsController < Devise::SessionsController
 
     is_valid_otp = resource.validate_and_consume_otp!(@otp_form.otp_attempt)
     unless is_valid_otp
-      @otp_form.errors.add(:otp_attempt, 'invalid code')
+      @otp_form.errors.add(:otp_attempt, 'is invalid')
       User.increment_counter(:failed_otp_attempts, self.resource.id)
       return render 'devise/otp_sessions/new'
     end

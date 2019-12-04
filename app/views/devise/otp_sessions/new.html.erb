@@ -3,8 +3,10 @@
     <h1 class="text-center">Log in</h1>
 
     <%= simple_form_for(@otp_form, url: user_otp_session_path, html: { id: "step-2" } ) do |f| %>
+    <%= f.error_notification %>
+
       <div class="form-group">
-        <%= f.text_field :otp_attempt, autocomplete: "off", placeholder: '2FA Code', class: 'form-control', id: "step-2-otp" %>
+        <%= f.input :otp_attempt, placeholder: '2FA Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
       </div>
 
       <% if devise_mapping.rememberable? -%>
