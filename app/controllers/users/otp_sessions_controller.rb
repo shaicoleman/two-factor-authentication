@@ -5,16 +5,23 @@ class Users::OtpSessionsController < Devise::SessionsController
     return respond_with resource, location: after_sign_in_path_for(resource) if user_signed_in?
     return redirect_to(new_user_session_path) unless session[:otp_user_id]
 
-    self.resource = User.find(session[:otp_user_id])
+    @otp_form = OtpForm.new
 
     render 'devise/otp_sessions/new'
   end
 
   # # Based on https://github.com/plataformatec/devise/blob/v4.7.1/app/controllers/devise/sessions_controller.rb
   def create
-    self.resource = User.find(session[:otp_user_id])
+    @otp_form = OtpForm.new
+    @otp_form.otp_attempt = params[:otp_form].require(:otp_attempt)
+
+    set_flash_message!(:notice, :signed_in)
+    self.resource = User.find_by(id: session[:otp_user_id])
+    sign_out
     sign_in(resource_name, resource)
+    respond_with resource, location: after_sign_in_path_for(resource)
   end
+
   #   self.resource = warden.authenticate!(auth_options)
   #   set_flash_message!(:notice, :signed_in)
   #   sign_in(resource_name, resource)

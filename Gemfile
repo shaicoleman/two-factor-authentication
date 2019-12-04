@@ -70,3 +70,4 @@ gem 'omniauth-github', '~> 1.3'
 
 gem 'devise-two-factor'
 gem 'rqrcode'
+gem 'simple_form'
