@@ -21,7 +21,7 @@ class Users::OtpSessionsController < Devise::SessionsController
     is_valid_otp = resource.validate_and_consume_otp!(@otp_form.otp_attempt)
     unless is_valid_otp
       @otp_form.errors.add(:otp_attempt, 'is invalid')
-      User.increment_counter(:failed_otp_attempts, self.resource.id)
+      resource.class.increment_counter(:failed_otp_attempts, self.resource.id)
       return render 'devise/otp_sessions/new'
     end
 
@@ -29,7 +29,6 @@ class Users::OtpSessionsController < Devise::SessionsController
     sign_in(resource_name, resource)
     self.resource.update_columns(failed_otp_attempts: 0)
     set_flash_message!(:notice, :signed_in)
-
 
     respond_with resource, location: after_sign_in_path_for(resource)
   end
