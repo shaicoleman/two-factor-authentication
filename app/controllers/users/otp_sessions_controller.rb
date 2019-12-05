@@ -30,7 +30,7 @@ class Users::OtpSessionsController < Devise::SessionsController
       resource.class.increment_counter(:failed_otp_attempts, resource.id)
       return render 'devise/otp_sessions/new'
     end
-    if resource.consumed_timestep >= matching_timestep
+    if resource.consumed_timestep.to_i >= matching_timestep
       @otp_form.errors.add(:otp_attempt, 'already used')
       return render 'devise/otp_sessions/new'
     end
