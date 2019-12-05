@@ -23,8 +23,8 @@ class Users::OtpSessionsController < Devise::SessionsController
     return redirect_to(new_user_session_path) unless resource.present?
     return render 'devise/otp_sessions/new' unless @otp_form.valid?
 
-    matching_timestep = verify_with_drift_returning_timestep(otp: resource.otp, otp_attempt: @otp_form.otp_attempt,
-                                                             drift: resource.class.otp_allowed_drift)
+    matching_timestep = OtpService.verify_with_drift_v2(otp: resource.otp, otp_attempt: @otp_form.otp_attempt,
+                                                        drift: resource.class.otp_allowed_drift)
     unless matching_timestep
       @otp_form.errors.add(:otp_attempt, 'is invalid')
       resource.class.increment_counter(:failed_otp_attempts, resource.id)
@@ -44,14 +44,6 @@ class Users::OtpSessionsController < Devise::SessionsController
   end
 
   private
-
-  # Based on https://github.com/mdp/rotp/blob/v2.1.2/lib/rotp/totp.rb#L43
-  def verify_with_drift_returning_timestep(otp:, otp_attempt:, drift:, time: Time.now.utc)
-    time = time.to_i
-    times = (time - drift..time + drift).step(otp.interval).to_a
-    times << time + drift if times.last < time + drift
-    times.detect { |ti| otp.verify(otp_attempt, ti) }&.div(otp.interval)
-  end
 
   def otp_form_params
     params[:otp_form].permit(:otp_attempt)
