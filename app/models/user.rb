@@ -12,8 +12,20 @@ class User < ApplicationRecord
   has_many :notifications, foreign_key: :recipient_id
   has_many :services
 
-  # OTP will be checked through the controler
+  # OTP will be checked through the controller, use otp_enabled? instead
   def otp_required_for_login
     false
+  end
+
+  def otp_enabled?
+    attributes['otp_required_for_login']
+  end
+
+  # TODO: Add fields in DB
+  def password_changed_at
+    updated_at
+  end
+  def otp_changed_at
+    updated_at
   end
 end

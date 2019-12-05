@@ -1,4 +1,4 @@
-<% if current_user.otp_required_for_login? %>
+<% if current_user.otp_enabled? %>
   <div><%= link_to "Disable", two_factor_path, method: :delete, remote: true, class: "btn btn-outline-danger" %></div>
 
   <div class="row">
@@ -20,7 +20,7 @@
     </div>
 
     <div class="text-center">
-      Can't scan the code?
+      Can't scan the code?<br>
 
       Secret key: <b><%= OtpService.format_otp_secret(user: current_user) %></b>
     </div>

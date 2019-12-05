@@ -1,0 +1,24 @@
+<div class="row">
+  <div class="card w-100">
+    <div class="card-body">
+      <h5 class="card-title">Password</h5>
+      <p class="card-text">Last updated: <%= resource.password_changed_at.strftime('%d %b %Y') %></p>
+      <a href="#" class="btn btn-primary">Change password</a>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="card w-100">
+    <div class="card-body">
+      <h5 class="card-title">Authenticator app 2FA</h5>
+      <% if resource.otp_enabled? %>
+        <p class="card-text">Added: <%= resource.otp_changed_at.strftime('%d %b %Y') %></p>
+        <a href="#" class="btn btn-primary">Change phone</a>
+        <a href="#" class="btn btn-primary btn-danger">Disable Authenticator</a>
+      <% else %>
+        <a href="#" class="btn btn-primary btn-success">Enable Authenticator</a>
+      <% end %>
+    </div>
+  </div>
+</div>

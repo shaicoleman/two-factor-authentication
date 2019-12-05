@@ -5,7 +5,7 @@ class Users::SessionsController < Devise::SessionsController
   def create
     self.resource = warden.authenticate!(auth_options)
     sign_in(resource_name, resource)
-    if user_signed_in? && current_user&.attributes['otp_required_for_login'] # otp_required_for_login is overridden in model
+    if user_signed_in? && current_user&.otp_enabled?
       otp_user_id = current_user.id
       sign_out
       session[:otp_user_id] = otp_user_id
