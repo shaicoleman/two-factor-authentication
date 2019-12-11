@@ -1,8 +1,8 @@
 class OtpService
+  ISSUER = 'OTPExample'
+
   def self.otp_qr_code(user:)
-    issuer = 'GoRails'
-    label = "#{issuer}:#{user.email}"
-    qrcode = RQRCode::QRCode.new(user.otp_provisioning_uri(label, issuer: issuer))
+    qrcode = RQRCode::QRCode.new(user.otp_provisioning_uri(label(user: user), issuer: ISSUER), level: :m)
     qrcode.as_svg(module_size: 4).html_safe
   end
 
@@ -30,5 +30,9 @@ class OtpService
 
   def self.format_otp_secret(user:)
     user.otp_secret.gsub(/(.{4})(?=.)/, '\1 \2')
+  end
+
+  def self.label(user:)
+    "#{ISSUER}:#{user.email}"
   end
 end

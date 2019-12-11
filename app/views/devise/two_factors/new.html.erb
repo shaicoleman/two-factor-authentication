@@ -7,9 +7,9 @@
         <ol class="mt-5">
           <li>
             Install Google Authenticator:
-            <%= link_to "Android", "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en", target: :blank %>
+            <%= link_to "Android", "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2", target: :blank %>
             or
-            <%= link_to "iOS", "https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8", target: :blank %>
+            <%= link_to "iOS", "https://apps.apple.com/us/app/google-authenticator/id388497605", target: :blank %>
           </li>
           <li>In the app, select "Set up account" or the Plus (+) sign.</li>
           <li>Choose "Scan barcode"</li>
@@ -26,10 +26,10 @@
           <p>To add the entry manually, provide the following details to the application on your phone.</p>
           <dl>
             <dt>Account:</dt>
-            <dd>gitlab.lvh.me:admin@example.com</dd>
+            <dd><%= OtpService.label(user: current_user) %></dd>
 
             <dt>Key</dt>
-            <dd><%= OtpService.format_otp_secret(user: current_user) %></b></dd>
+            <dd><%= OtpService.format_otp_secret(user: current_user) %></dd>
 
             <dt>Time-based</dt>
             <dd>Yes</dd>
