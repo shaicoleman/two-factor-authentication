@@ -2,9 +2,54 @@
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
     <h2>Two Factor Authentication</h2>
 
-    <div id="two_factor">
-      <%= render partial: "devise/registrations/two_factor" %>
-    </div>
+    <div class="row">
+      <div class="col-8">
+        <ol class="mt-5">
+          <li>
+            Install Google Authenticator:
+            <%= link_to "Android", "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en", target: :blank %>
+            or
+            <%= link_to "iOS", "https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8", target: :blank %>
+          </li>
+          <li>In the app, select "Set up account" or the Plus (+) sign.</li>
+          <li>Choose "Scan barcode"</li>
+        </ol>
+      </div>
 
+      <div class="col-4 text-center">
+        <%= OtpService.otp_qr_code(user: current_user) %>
+      </div>
+
+      <div class="card bg-light">
+        <div class="card-body">
+          <h5 class="card-title">Can't scan the code?</h5>
+          <p>To add the entry manually, provide the following details to the application on your phone.</p>
+          <dl>
+            <dt>Account:</dt>
+            <dd>gitlab.lvh.me:admin@example.com</dd>
+
+            <dt>Key</dt>
+            <dd><%= OtpService.format_otp_secret(user: current_user) %></b></dd>
+
+            <dt>Time-based</dt>
+            <dd>Yes</dd>
+          </dl>
+        </div>
+      </div>
+
+      <%= simple_form_for(@otp_form, url: user_two_factors_path, html: { id: "step-2" } ) do |f| %>
+      <%= f.error_notification %>
+
+        <div class="form-group">
+          <%= f.input :otp_attempt, placeholder: '2FA Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
+        </div>
+
+        <div class="form-group">
+          <%= f.submit "Enable Two Factor Authenticaton", class: "btn btn-primary btn-block btn-lg" %>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
+
+

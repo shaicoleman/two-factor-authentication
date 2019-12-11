@@ -12,11 +12,11 @@
   <div class="card w-100">
     <div class="card-body">
       <h5 class="card-title">Two-Factor Authentication</h5>
-      <p>Increase your account's security by enabling Two-Factor Authentication (2FA)</p>
       <% if resource.otp_enabled? %>
         <p class="card-text">✔️ On - Added <%= resource.otp_changed_at.strftime('%d %b %Y') %></p>
         <%= link_to 'Manage two-factor authentication', :edit_user_two_factors, class: 'btn btn-primary' %>
       <% else %>
+        <p>Increase your account's security by enabling Two-Factor Authentication (2FA)</p>
         <p class="card-text">❌ Off</p>
         <%= link_to 'Enable two-factor authentication', :new_user_two_factors, class: 'btn btn-success' %>
       <% end %>

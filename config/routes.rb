@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     end
     scope controller: 'users/two_factors' do
       get   '/users/two_factors/new', action: :new, as: :new_user_two_factors
+      post  '/users/two_factors/new', action: :create, as: :user_two_factors
       get   '/users/two_factors/edit', action: :edit, as: :edit_user_two_factors
     end
   end

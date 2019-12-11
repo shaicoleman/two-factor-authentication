@@ -23,21 +23,14 @@ class Users::OtpSessionsController < Devise::SessionsController
     return redirect_to(new_user_session_path) unless resource.present?
     return render 'devise/otp_sessions/new' unless @otp_form.valid?
 
-    matching_timestep = OtpService.verify_with_drift_v2(otp: resource.otp, otp_attempt: @otp_form.otp_attempt,
-                                                        drift: resource.class.otp_allowed_drift)
-    unless matching_timestep
-      @otp_form.errors.add(:otp_attempt, 'is invalid')
-      resource.class.increment_counter(:failed_otp_attempts, resource.id)
-      return render 'devise/otp_sessions/new'
-    end
-    if resource.consumed_timestep.to_i >= matching_timestep
-      @otp_form.errors.add(:otp_attempt, 'already used')
+    response = OtpService.attempt_otp(user: self.resource, otp_attempt: @otp_form.otp_attempt)
+    unless response == :success
+      @otp_form.errors.add(:otp_attempt, response)
       return render 'devise/otp_sessions/new'
     end
 
     sign_out
     sign_in(resource_name, resource)
-    resource.update_columns(failed_otp_attempts: 0, consumed_timestep: matching_timestep)
     set_flash_message!(:notice, :signed_in)
 
     respond_with resource, location: after_sign_in_path_for(resource)
