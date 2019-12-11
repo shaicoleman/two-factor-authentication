@@ -11,10 +11,10 @@ class OtpService
                                              drift: user.class.otp_allowed_drift)
     unless matching_timestep
       user.class.increment_counter(:failed_otp_attempts, user.id) unless ignore_failed
-      return :code_invalid
+      return I18n.t('errors.messages.invalid')
     end
     if user.consumed_timestep.to_i >= matching_timestep
-      return :code_already_used
+      return I18n.t('two_factors.otp_code_already_used')
     end
     user.update_columns(failed_otp_attempts: 0, consumed_timestep: matching_timestep)
     :success

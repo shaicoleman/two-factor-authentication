@@ -31,3 +31,5 @@
 
 en:
   hello: "Hello world"
+  two_factors:
+    otp_code_already_used: "has already been used. Please wait for a new code"
