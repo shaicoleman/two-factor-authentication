@@ -6,11 +6,11 @@ class OtpService
     qrcode.as_svg(module_size: 4).html_safe
   end
 
-  def self.attempt_otp(user:, otp_attempt:)
+  def self.attempt_otp(user:, otp_attempt:, ignore_failed: false)
     matching_timestep = verify_with_drift_v2(otp: user.otp, otp_attempt: otp_attempt,
                                              drift: user.class.otp_allowed_drift)
     unless matching_timestep
-      user.class.increment_counter(:failed_otp_attempts, user.id)
+      user.class.increment_counter(:failed_otp_attempts, user.id) unless ignore_failed
       return :code_invalid
     end
     if user.consumed_timestep.to_i >= matching_timestep

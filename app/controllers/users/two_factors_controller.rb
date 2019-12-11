@@ -12,7 +12,7 @@ class Users::TwoFactorsController < Devise::SessionsController
     @otp_form = OtpForm.new(otp_form_params)
     return render 'devise/two_factors/new' unless @otp_form.valid?
 
-    response = OtpService.attempt_otp(user: current_user, otp_attempt: @otp_form.otp_attempt)
+    response = OtpService.attempt_otp(user: current_user, otp_attempt: @otp_form.otp_attempt, ignore_failed: true)
     unless response == :success
       @otp_form.errors.add(:otp_attempt, response)
       return render 'devise/two_factors/new'
