@@ -3,7 +3,7 @@ class OtpService
 
   def self.otp_qr_code(user:)
     otpauth_url = user.otp_provisioning_uri(label(user: user), issuer: ISSUER)
-    qrcode = RQRCode::QRCode.new(otpauth_url, level: :m)
+    qrcode = RQRCode::QRCode.new(otpauth_url, level: :l)
     qrcode.as_svg(module_size: 4).html_safe
   end
 
