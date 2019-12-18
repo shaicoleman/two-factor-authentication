@@ -29,7 +29,7 @@
             <dd><%= OtpService.label(user: current_user) %></dd>
 
             <dt>Key</dt>
-            <dd><%= OtpService.format_code(current_user.otp_secret) %></dd>
+            <dd><%= OtpService.format_otp_secret(current_user.otp_secret) %></dd>
 
             <dt>Time-based</dt>
             <dd>Yes</dd>

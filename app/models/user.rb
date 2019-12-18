@@ -23,6 +23,8 @@ class User < ApplicationRecord
   end
 
   def invalidate_otp_backup_code!(code)
+    self.otp_backup_codes = self.otp_backup_codes.map { |backup_code| backup_code unless backup_code == code }
+    save!
   end
 
   # TODO: Add fields in DB

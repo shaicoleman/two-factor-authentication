@@ -35,8 +35,16 @@ class OtpService
     codes
   end
 
-  def self.format_code(code)
-    code.gsub(/(.{4})(?=.)/, '\1 \2')
+  def self.remaining_backup_codes(user:)
+    user.otp_backup_codes&.count(&:presence) || 0
+  end
+
+  def self.format_otp_secret(code)
+    code&.gsub(/(.{4})(?=.)/, '\1 \2') || 'Error'
+  end
+
+  def self.format_backup_code(code)
+    code&.gsub(/(.{4})(?=.)/, '\1 \2') || 'Already used'
   end
 
   def self.label(user:)

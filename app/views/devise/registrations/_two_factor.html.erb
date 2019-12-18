@@ -22,7 +22,7 @@
     <div class="text-center">
       Can't scan the code?<br>
 
-      Secret key: <b><%= OtpService.format_code(current_user.otp_secret) %></b>
+      Secret key: <b><%= OtpService.format_otp_secret(current_user.otp_secret) %></b>
     </div>
   </div>
 

@@ -1,3 +1,25 @@
-<div><%= link_to "View backup codes", :user_backup_codes, class: "btn btn-danger" %></div>
+<div class="row">
+  <div class="card w-100">
+    <div class="card-body">
+      <h5 class="card-title">Two-Factor Authentication</h5>
+      <% if current_user.otp_enabled? %>
+        <p class="card-text">✔️ On - Added <%= current_user.otp_changed_at.strftime('%d %b %Y') %></p>
+        <div><%= link_to "Disable Authenticator", two_factor_path, method: :delete, class: "btn btn-danger", data: { confirm: 'Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in.' } %></div>
+      <% else %>
+        <p>Increase your account's security by enabling Two-Factor Authentication (2FA)</p>
+        <p class="card-text">❌ Off</p>
+        <%= link_to 'Enable two-factor authentication', :new_user_two_factors, class: 'btn btn-success' %>
+      <% end %>
+    </div>
+  </div>
+</div>
 
-<div><%= link_to "Disable Authenticator", two_factor_path, method: :delete, class: "btn btn-danger", data: { confirm: 'Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in.' } %></div>
+<div class="row">
+  <div class="card w-100">
+    <div class="card-body">
+      <h5 class="card-title">Backup codes</h5>
+      <p class="card-text"><%= OtpService.remaining_backup_codes(user: current_user) %> codes available</p>
+      <%= link_to "View backup codes", :user_backup_codes, class: 'btn btn-primary' %>
+    </div>
+  </div>
+</div>
