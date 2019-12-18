@@ -1,7 +1,6 @@
 class User < ApplicationRecord
   devise :two_factor_authenticatable, otp_secret_encryption_key: Rails.application.secrets.otp_key,
          otp_allowed_drift: 30, otp_secret_length: 32
-  devise :two_factor_backupable
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -9,6 +8,10 @@ class User < ApplicationRecord
 
   has_many :notifications, foreign_key: :recipient_id
   has_many :services
+
+  attr_encrypted :otp_backup_codes, key: Rails.application.secrets.otp_key,
+    marshal: true, marshaler: JSON,
+    mode: :per_attribute_iv_and_salt unless self.attr_encrypted?(:otp_backup_codes)
 
   # OTP will be checked through the controller, use otp_enabled? instead
   def otp_required_for_login

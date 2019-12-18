@@ -31,8 +31,7 @@ class OtpService
 
   def self.generate_backup_codes(user:, count: 10, length: 8)
     codes = count.times.map { SecureRandom.base58(100).gsub(/[01l\/A-Z]/, '')[0, length] }
-    hashed_codes = codes.map { |code| Devise::Encryptor.digest(user.class, code) }
-    user.update_columns(otp_backup_codes: hashed_codes)
+    user.update!(otp_backup_codes: codes)
     codes
   end
 
