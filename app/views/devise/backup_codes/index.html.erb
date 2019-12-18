@@ -1,11 +1,14 @@
-You can only use each backup code once.
+<p>Backup codes let you access your account if your phone is lost, damaged or stolen.</p>
+<p>We ask you to print this list and keep it in a safe place</p>
 
 <form>
   <% @backup_codes.each do |backup_code| %>
-    <input type="checkbox" disabled> <code><%= OtpService.format_backup_code(backup_code) %></code></input><br>
+    <input type="checkbox" disabled> <code><%= OtpService.format_code(backup_code) %></code></input><br>
   <% end %>
 </form>
 
 These codes were generated on: <%= current_user.otp_backup_codes_updated_at.strftime('%d %b %Y') %>
 
 <div><%= link_to "Get new codes", :user_backup_codes, method: :post, class: "btn btn-danger", data: { confirm: 'If you get a new set of backup codes, none of your current codes will work' } %></div>
+
+<input type="checkbox"> I have printed or saved these codes</input><br>

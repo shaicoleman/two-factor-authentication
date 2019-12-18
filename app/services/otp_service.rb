@@ -35,12 +35,8 @@ class OtpService
     codes
   end
 
-  def self.format_otp_secret(user:)
-    user.otp_secret.gsub(/(.{4})(?=.)/, '\1 \2')
-  end
-
-  def self.format_backup_code(backup_code)
-    backup_code.gsub(/(.{4})(?=.)/, '\1 \2')
+  def self.format_code(code)
+    code.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
   def self.label(user:)
