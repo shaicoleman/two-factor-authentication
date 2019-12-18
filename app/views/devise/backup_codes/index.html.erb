@@ -1,5 +1,7 @@
-<ol>
+<form>
   <% @backup_codes.each do |backup_code| %>
-    <li><code><%= OtpService.format_backup_code(backup_code) %></code></li>
+    <input type="checkbox" disabled> <code><%= OtpService.format_backup_code(backup_code) %></code></input><br>
   <% end %>
-</ol>
+</form>
+
+<div><%= link_to "Get new codes", :user_backup_codes, method: :post, class: "btn btn-danger" %></div>

@@ -1,3 +1,3 @@
-<div><%= link_to "Disable Authenticator", two_factor_path, method: :delete, class: "btn btn-danger" %></div>
+<div><%= link_to "View backup codes", :user_backup_codes, class: "btn btn-danger" %></div>
 
-<div><%= link_to "Change phone", two_factor_path, method: :delete, class: "btn btn-danger" %></div>
+<div><%= link_to "Disable Authenticator", two_factor_path, method: :delete, class: "btn btn-danger", confirm: true %></div>
