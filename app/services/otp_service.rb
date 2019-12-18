@@ -30,7 +30,7 @@ class OtpService
   end
 
   def self.generate_backup_codes(user:, count: 10, length: 8)
-    codes = count.times.map { format("%0#{length}i", SecureRandom.random_number(10**length)) }
+    codes = count.times.map { SecureRandom.base58(100).gsub(/[01l\/A-Z]/, '')[0, length] }
     hashed_codes = codes.map { |code| Devise::Encryptor.digest(user.class, code) }
     user.update_columns(otp_backup_codes: hashed_codes)
     codes
@@ -40,8 +40,8 @@ class OtpService
     user.otp_secret.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
-  def self.format_backup_codes(user:)
-    user.otp_secret.gsub(/(.{4})(?=.)/, '\1 \2')
+  def self.format_backup_code(backup_code)
+    backup_code.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
   def self.label(user:)

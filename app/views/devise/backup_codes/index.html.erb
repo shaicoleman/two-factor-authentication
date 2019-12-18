@@ -1,5 +1,5 @@
-<ul>
+<ol>
   <% @backup_codes.each do |backup_code| %>
-    <li><%= backup_code %></li>
+    <li><code><%= OtpService.format_backup_code(backup_code) %></code></li>
   <% end %>
-</ul>
+</ol>
