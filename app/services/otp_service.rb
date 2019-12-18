@@ -30,7 +30,7 @@ class OtpService
   end
 
   def self.generate_backup_codes(user:, count: 10, length: 8)
-    codes = count.times.map { SecureRandom.base58(100).gsub(/[01l\/A-Z]/, '')[0, length] }
+    codes = count.times.map { format("%0#{length}i", SecureRandom.random_number(10**length)) }
     user.update!(otp_backup_codes: codes)
     codes
   end
