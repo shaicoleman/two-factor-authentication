@@ -1,3 +1,3 @@
 <div><%= link_to "View backup codes", :user_backup_codes, class: "btn btn-danger" %></div>
 
-<div><%= link_to "Disable Authenticator", two_factor_path, method: :delete, class: "btn btn-danger", confirm: true %></div>
+<div><%= link_to "Disable Authenticator", two_factor_path, method: :delete, class: "btn btn-danger", data: { confirm: 'Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in.' } %></div>
