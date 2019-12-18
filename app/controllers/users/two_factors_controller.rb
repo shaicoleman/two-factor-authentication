@@ -19,13 +19,16 @@ class Users::TwoFactorsController < Devise::SessionsController
     end
     current_user.update!(otp_required_for_login: true)
 
-    redirect_to action: :edit
-
-    # return redirect_to(new_user_session_path) unless resource.present?
+    redirect_to :user_backup_codes
   end
 
   def edit
     render 'devise/two_factors/edit'
+  end
+
+  def destroy
+    current_user.update!(otp_required_for_login: false)
+    redirect_to :edit_user_registration
   end
 
   private

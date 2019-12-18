@@ -29,7 +29,18 @@ class OtpService
     times.detect { |ti| otp.verify(otp_attempt, ti) }&.div(otp.interval)
   end
 
+  def self.generate_backup_codes(user:, count: 10, length: 8)
+    codes = count.times.map { format("%0#{length}i", SecureRandom.random_number(10**length)) }
+    hashed_codes = codes.map { |code| Devise::Encryptor.digest(user.class, code) }
+    user.update_columns(otp_backup_codes: hashed_codes)
+    codes
+  end
+
   def self.format_otp_secret(user:)
+    user.otp_secret.gsub(/(.{4})(?=.)/, '\1 \2')
+  end
+
+  def self.format_backup_codes(user:)
     user.otp_secret.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
