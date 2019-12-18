@@ -22,6 +22,9 @@ class User < ApplicationRecord
     attributes['otp_required_for_login']
   end
 
+  def invalidate_otp_backup_code!(code)
+  end
+
   # TODO: Add fields in DB
   def password_changed_at
     updated_at
