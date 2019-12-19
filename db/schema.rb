@@ -57,6 +57,8 @@ ActiveRecord::Schema.define(version: 2017_11_06_183523) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.integer "failed_otp_attempts", default: 0, null: false
+    t.datetime "otp_updated_at"
+    t.datetime "password_changed_at"
     t.string "encrypted_otp_backup_codes"
     t.string "encrypted_otp_backup_codes_iv"
     t.string "encrypted_otp_backup_codes_salt"

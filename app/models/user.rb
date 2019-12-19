@@ -28,12 +28,4 @@ class User < ApplicationRecord
     self.otp_backup_codes = self.otp_backup_codes.map { |backup_code| backup_code unless backup_code == code }
     save!
   end
-
-  # TODO: Add fields in DB
-  def password_changed_at
-    updated_at
-  end
-  def otp_changed_at
-    updated_at
-  end
 end

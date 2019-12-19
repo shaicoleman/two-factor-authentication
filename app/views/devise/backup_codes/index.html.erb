@@ -7,6 +7,6 @@
   <% end %>
 </form>
 
-These codes were generated on: <%= current_user.otp_backup_codes_updated_at.strftime('%d %b %Y') %>
+These codes were generated on: <%= current_user.otp_backup_codes_updated_at&.strftime('%d %b %Y') %>
 
 <div><%= link_to "Get new codes", :user_backup_codes, method: :post, class: "btn btn-primary", data: { confirm: 'If you get a new set of backup codes, none of your current codes will work' } %></div>

@@ -18,7 +18,7 @@ class Users::TwoFactorsController < Devise::SessionsController
       @otp_form.errors.add(:otp_attempt, response)
       return render 'devise/two_factors/new'
     end
-    current_user.update!(otp_required_for_login: true)
+    current_user.update!(otp_required_for_login: true, otp_updated_at: Time.now.utc)
 
     redirect_to :user_backup_codes
   end
@@ -28,7 +28,7 @@ class Users::TwoFactorsController < Devise::SessionsController
   end
 
   def destroy
-    current_user.update!(otp_required_for_login: false, otp_secret: nil, consumed_timestep: nil)
+    current_user.update!(otp_required_for_login: false, otp_secret: nil, consumed_timestep: nil, otp_updated_at: Time.now.utc)
     redirect_to :edit_user_registration
   end
 
