@@ -4,6 +4,7 @@ class Users::TwoFactorsController < Devise::SessionsController
 
   def new
     @otp_secret = User.generate_otp_secret
+    current_user.update!(otp_secret: @otp_secret)
     @otp_form = OtpForm.new
     render 'devise/two_factors/new'
   end
