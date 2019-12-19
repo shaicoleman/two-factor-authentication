@@ -11,17 +11,16 @@ Rails.application.routes.draw do
       post  '/users/sign_in/otp', action: :create, as: :user_otp_session
     end
     scope controller: 'users/two_factors' do
-      get   '/users/two_factors/new', action: :new, as: :new_user_two_factors
-      post  '/users/two_factors/new', action: :create, as: :user_two_factors
-      get   '/users/two_factors/edit', action: :edit, as: :edit_user_two_factors
+      get    '/users/two_factors/new', action: :new, as: :new_user_two_factors
+      post   '/users/two_factors/new', action: :create, as: :user_two_factors
+      get    '/users/two_factors/edit', action: :edit, as: :edit_user_two_factors
+      delete '/users/two_factors', action: :destroy
     end
     scope controller: 'users/backup_codes' do
       get   '/users/backup_codes', action: :index, as: :user_backup_codes
       post  '/users/backup_codes', action: :create
     end
   end
-
-  resource :two_factor
 
   # Admin
   authenticate :user, lambda { |u| u.admin? } do

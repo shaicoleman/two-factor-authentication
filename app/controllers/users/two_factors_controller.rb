@@ -28,7 +28,7 @@ class Users::TwoFactorsController < Devise::SessionsController
   end
 
   def destroy
-    current_user.update!(otp_required_for_login: false)
+    current_user.update!(otp_required_for_login: false, otp_secret: nil, consumed_timestep: nil)
     redirect_to :edit_user_registration
   end
 
