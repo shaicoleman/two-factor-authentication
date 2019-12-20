@@ -17,7 +17,21 @@ class OtpService
     if user.consumed_timestep.to_i >= matching_timestep
       return I18n.t('two_factors.otp_code_already_used')
     end
-    user.update_columns(failed_otp_attempts: 0, consumed_timestep: matching_timestep)
+    user.update!(failed_otp_attempts: 0, failed_backup_code_attempts: 0, consumed_timestep: matching_timestep)
+    :success
+  end
+
+  def self.attempt_backup_code(user:, backup_code_attempt:)
+    if "!#{backup_code_attempt}".in?(user.otp_backup_codes)
+      return I18n.t('two_factors.backup_code_already_used')
+    end
+    unless backup_code_attempt.in?(user.otp_backup_codes)
+      user.class.increment_counter(:failed_backup_code_attempts, user.id)
+      return I18n.t('errors.messages.invalid')
+    end
+
+    backup_codes = user.otp_backup_codes.map { |code| (code == backup_code_attempt ? "!#{code}" : code) }
+    user.update!(otp_backup_codes: backup_codes, failed_otp_attempts: 0, failed_backup_code_attempts: 0)
     :success
   end
 
@@ -36,7 +50,7 @@ class OtpService
   end
 
   def self.remaining_backup_codes(user:)
-    user.otp_backup_codes&.count(&:presence) || 0
+    user.otp_backup_codes&.count { |code| !code.starts_with?('!') } || 0
   end
 
   def self.format_otp_secret(code)
@@ -44,7 +58,9 @@ class OtpService
   end
 
   def self.format_backup_code(code)
-    code&.gsub(/(.{4})(?=.)/, '\1 \2') || 'Already used'
+    return 'Already used' if code.starts_with?('!')
+
+    code&.gsub(/(.{4})(?=.)/, '\1 \2')
   end
 
   def self.label(user:)
