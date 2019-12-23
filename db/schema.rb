@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2017_11_06_183523) do
+ActiveRecord::Schema.define(version: 2017_11_06_183120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,14 +53,14 @@ ActiveRecord::Schema.define(version: 2017_11_06_183523) do
     t.datetime "updated_at", null: false
     t.string "encrypted_otp_secret"
     t.string "encrypted_otp_secret_iv"
-    t.integer "consumed_timestep"
-    t.boolean "otp_required_for_login"
-    t.integer "failed_otp_attempts", default: 0, null: false
-    t.datetime "otp_updated_at"
-    t.datetime "password_changed_at"
     t.string "encrypted_otp_backup_codes"
     t.string "encrypted_otp_backup_codes_iv"
+    t.integer "consumed_timestep"
+    t.boolean "otp_required_for_login"
+    t.datetime "otp_updated_at"
+    t.datetime "password_changed_at"
     t.datetime "otp_backup_codes_updated_at"
+    t.integer "failed_otp_attempts", default: 0, null: false
     t.integer "failed_backup_code_attempts", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
