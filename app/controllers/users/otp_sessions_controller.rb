@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Users::OtpSessionsController < Devise::SessionsController
-  skip_before_action :verify_authenticity_token
-
   def new
     if user_signed_in?
       return respond_with resource, location: after_sign_in_path_for(resource)
