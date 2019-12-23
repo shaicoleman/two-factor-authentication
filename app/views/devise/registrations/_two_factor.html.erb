@@ -1,4 +1,4 @@
-<% if current_user.otp_enabled? %>
+<% if current_user.otp_required_for_login? %>
   <div><%= link_to "Disable", two_factor_path, method: :delete, remote: true, class: "btn btn-outline-danger" %></div>
 
   <div class="row">

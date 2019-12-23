@@ -3,8 +3,7 @@ class Users::TwoFactorsController < Devise::SessionsController
   before_action :authenticate_user!
 
   def new
-    @otp_secret = User.generate_otp_secret
-    current_user.update!(otp_secret: @otp_secret)
+    @otp_secret = OtpService.generate_otp_secret(user: current_user)
     @otp_form = OtpForm.new
     render 'devise/two_factors/new'
   end

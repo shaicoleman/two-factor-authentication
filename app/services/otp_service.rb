@@ -2,14 +2,14 @@ class OtpService
   ISSUER = 'OTPExample'
 
   def self.otp_qr_code(user:)
-    otpauth_url = user.otp_provisioning_uri(label(user: user), issuer: ISSUER)
+    otpauth_url = ROTP::TOTP.new(user.otp_secret, { issuer: ISSUER }).provisioning_uri("#{ISSUER}:#{user.email}")
     qrcode = RQRCode::QRCode.new(otpauth_url, level: :l)
     qrcode.as_svg(module_size: 4).html_safe
   end
 
   def self.attempt_otp(user:, otp_attempt:, ignore_failed: false)
-    matching_timestep = verify_with_drift_v2(otp: user.otp, otp_attempt: otp_attempt,
-                                             drift: user.class.otp_allowed_drift)
+    otp = ROTP::TOTP.new(user.otp_secret)
+    matching_timestep = verify_with_drift_v2(otp: otp, otp_attempt: otp_attempt, drift: 30.seconds)
     unless matching_timestep
       user.class.increment_counter(:failed_otp_attempts, user.id) unless ignore_failed
       return I18n.t('errors.messages.invalid')
@@ -41,6 +41,12 @@ class OtpService
     times = (time - drift..time + drift).step(otp.interval).to_a
     times << time + drift if times.last < time + drift
     times.detect { |ti| otp.verify(otp_attempt, ti) }&.div(otp.interval)
+  end
+
+  def self.generate_otp_secret(user:, length: 32)
+    otp_secret = ROTP::Base32.random_base32(length)
+    user.update!(otp_secret: otp_secret, otp_updated_at: Time.now.utc)
+    otp_secret
   end
 
   def self.generate_backup_codes(user:, count: 10, length: 8)

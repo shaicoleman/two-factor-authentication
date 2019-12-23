@@ -17,10 +17,6 @@
     <% end %>
 
     <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "d-none", id: "step-2" } ) do |f| %>
-      <div class="form-group">
-        <%= f.text_field :otp_attempt, autocomplete: "off", placeholder: '2FA Code', class: 'form-control d-none', id: "step-2-otp" %>
-      </div>
-
       <% if devise_mapping.rememberable? -%>
         <div class="form-check">
           <label class="form-check-label">

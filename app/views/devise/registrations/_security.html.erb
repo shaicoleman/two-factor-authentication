@@ -12,7 +12,7 @@
   <div class="card w-100">
     <div class="card-body">
       <h5 class="card-title">Two-Factor Authentication</h5>
-      <% if resource.otp_enabled? %>
+      <% if resource.otp_required_for_login? %>
         <p class="card-text">✔️ On - Added <%= resource.otp_updated_at&.strftime('%d %b %Y') %></p>
         <%= link_to 'Manage two-factor authentication', :edit_user_two_factors, class: 'btn btn-primary' %>
       <% else %>

@@ -2,7 +2,7 @@
   <div class="card w-100">
     <div class="card-body">
       <h5 class="card-title">Two-Factor Authentication</h5>
-      <% if current_user.otp_enabled? %>
+      <% if current_user.otp_required_for_login? %>
         <p class="card-text">✔️ On - Added <%= current_user.otp_updated_at&.strftime('%d %b %Y') %></p>
         <div><%= link_to "Disable Authenticator", :users_two_factors, method: :delete, class: "btn btn-danger", data: { confirm: 'Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in.' } %></div>
 
