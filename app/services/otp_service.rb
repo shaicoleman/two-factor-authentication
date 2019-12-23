@@ -59,7 +59,7 @@ class OtpService
   def self.format_backup_code(code)
     return 'Already used' if code.starts_with?('!')
 
-    code&.gsub(/(.{4})(?=.)/, '\1 \2')
+    code&.gsub(/(.{4})(?=.)/, '\1 \2') || 'Error'
   end
 
   def self.label(user:)
