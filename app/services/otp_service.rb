@@ -36,8 +36,8 @@ class OtpService
     :success
   end
 
-  def self.generate_otp_secret(user:, length: 32)
-    otp_secret = ROTP::Base32.random_base32(length).downcase
+  def self.generate_otp_secret(user:)
+    otp_secret = ROTP::Base32.random.downcase
     user.update!(otp_secret: otp_secret, otp_updated_at: Time.now.utc)
     otp_secret
   end
