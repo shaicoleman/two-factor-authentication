@@ -2,11 +2,11 @@
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
     <h1 class="text-center">Log in</h1>
 
-    <%= simple_form_for(@otp_form, url: user_otp_session_path, html: { id: "step-2" } ) do |f| %>
+    <%= simple_form_for(@backup_code_form, url: user_backup_code_session_path, html: { id: "step-2" } ) do |f| %>
     <%= f.error_notification %>
 
       <div class="form-group">
-        <%= f.input :otp_attempt, placeholder: '2FA Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
+        <%= f.input :backup_code_attempt, placeholder: 'Backup Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
       </div>
 
       <% if devise_mapping.rememberable? -%>
@@ -24,7 +24,7 @@
     <% end %>
 
     <div class="text-center">
-      <%= link_to 'Log in with a backup code', :new_user_backup_code_session %>
+      <%= link_to 'Log in with authenticator', :new_user_otp_session %>
     </div>
 
     <div class="text-center">
