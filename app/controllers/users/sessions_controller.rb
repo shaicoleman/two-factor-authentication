@@ -1,6 +1,4 @@
 class Users::SessionsController < Devise::SessionsController
-  skip_before_action :verify_authenticity_token
-
   # Based on https://github.com/plataformatec/devise/blob/v4.7.1/app/controllers/devise/sessions_controller.rb
   def create
     self.resource = warden.authenticate!(auth_options)
