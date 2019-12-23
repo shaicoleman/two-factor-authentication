@@ -13,7 +13,6 @@ class Users::OtpSessionsController < Devise::SessionsController
   end
 
   # Based on https://github.com/plataformatec/devise/blob/v4.7.1/app/controllers/devise/sessions_controller.rb
-  # and https://github.com/tinfoil/devise-two-factor/blob/v3.1.0/lib/devise_two_factor/models/two_factor_authenticatable.rb
   def create
     @otp_form = OtpForm.new(otp_form_params)
 
