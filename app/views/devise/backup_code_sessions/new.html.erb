@@ -1,6 +1,8 @@
 <div class="row">
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-    <h1 class="text-center">Log in</h1>
+    <h1 class="text-center">Enter Backup Code</h1>
+
+    <p>Enter one of your 8-digit backup codes</p>
 
     <%= simple_form_for(@backup_code_form, url: user_backup_code_session_path, html: { id: "step-2" } ) do |f| %>
     <%= f.error_notification %>

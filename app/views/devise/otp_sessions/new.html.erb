@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-    <h1 class="text-center">Log in</h1>
+    <h1 class="text-center">Enter 2FA Code</h1>
+    <p>Enter the code given from the Authenticator App</p>
 
     <%= simple_form_for(@otp_form, url: user_otp_session_path, html: { id: "step-2" } ) do |f| %>
     <%= f.error_notification %>
