@@ -1,3 +1,5 @@
+<h3>Save your backup codes</h3>
+
 <p>Backup codes let you access your account if your phone is lost, damaged or stolen.</p>
 <p>We ask you to print this list and keep it in a safe place or save it securely using a password manager</p>
 
@@ -10,3 +12,7 @@
 These codes were generated on: <%= current_user.otp_backup_codes_updated_at&.strftime('%d %b %Y') %>
 
 <div><%= link_to "Get new codes", :user_backup_codes, method: :post, class: "btn btn-primary", data: { confirm: 'If you get a new set of backup codes, none of your current codes will work' } %></div>
+<br>
+<%= link_to "Print", '#', class: "btn btn-primary disabled" %>
+<%= link_to "Download", '#', class: "btn btn-primary disabled" %>
+<%= link_to "Copy", '#', class: "btn btn-primary disabled" %>
