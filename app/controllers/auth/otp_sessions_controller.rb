@@ -17,12 +17,12 @@ class Auth::OtpSessionsController < ApplicationController
 
     user = User.find_by(id: session[:otp_user_id])
     return redirect_to(:new_user_session) unless user.present?
-    return render 'auth/otp_sessions/new' unless @otp_form.valid?
+    return render :new unless @otp_form.valid?
 
     response = OtpService.attempt_otp(user: user, otp_attempt: @otp_form.otp_attempt)
     unless response == :success
       @otp_form.errors.add(:otp_attempt, response)
-      return render 'auth/otp_sessions/new'
+      return render :new
     end
 
     sign_out

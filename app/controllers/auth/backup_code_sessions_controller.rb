@@ -17,12 +17,12 @@ class Auth::BackupCodeSessionsController < ApplicationController
 
     user = User.find_by(id: session[:otp_user_id])
     return redirect_to(:new_user_session) unless user.present?
-    return render 'auth/backup_code_sessions/new' unless @backup_code_form.valid?
+    return render :new unless @backup_code_form.valid?
 
     response = OtpService.attempt_backup_code(user: user, backup_code_attempt: @backup_code_form.backup_code_attempt)
     unless response == :success
       @backup_code_form.errors.add(:backup_code_attempt, response)
-      return render 'auth/backup_code_sessions/new'
+      return render :new
     end
 
     sign_out
