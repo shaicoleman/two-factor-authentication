@@ -3,14 +3,14 @@
     <h1 class="text-center">Enter 2FA Code</h1>
     <p>Enter the code given from the Authenticator App</p>
 
-    <%= simple_form_for(@otp_form, url: user_otp_session_path, html: { id: "step-2" } ) do |f| %>
+    <%= simple_form_for(@otp_form, url: auth_otp_sessions_path, html: { id: "step-2" } ) do |f| %>
     <%= f.error_notification %>
 
       <div class="form-group">
         <%= f.input :otp_attempt, placeholder: '2FA Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
       </div>
 
-      <% if devise_mapping.rememberable? -%>
+      <% if 'devise_mapping.rememberable?' -%>
         <div class="form-check">
           <label class="form-check-label">
             <%= f.check_box :remember_me, class: "form-check-input" %>

@@ -5,11 +5,15 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks",
                                     sessions: "users/sessions" }
 
+  namespace :auth do
+    resources :otp_sessions, only: [:new, :create]
+  end
+
   devise_scope :user do
-    scope controller: 'users/otp_sessions' do
-      get   '/users/sign_in/otp', action: :new, as: :new_user_otp_session
-      post  '/users/sign_in/otp', action: :create, as: :user_otp_session
-    end
+    # scope controller: 'users/otp_sessions' do
+    #   get   '/users/sign_in/otp', action: :new, as: :new_user_otp_session
+    #   post  '/users/sign_in/otp', action: :create, as: :user_otp_session
+    # end
     scope controller: 'users/backup_code_sessions' do
       get   '/users/sign_in/backup_code', action: :new, as: :new_user_backup_code_session
       post  '/users/sign_in/backup_code', action: :create, as: :user_backup_code_session
