@@ -6,8 +6,8 @@ Rails.application.routes.draw do
                                     sessions: "users/sessions" }
 
   namespace :auth do
-    resources :otp_sessions, only: [:new, :create]
-    resources :backup_code_sessions, only: [:new, :create]
+    resources :otp_sessions, only: [:index, :new, :create]
+    resources :backup_code_sessions, only: [:index, :new, :create]
   end
 
   devise_scope :user do

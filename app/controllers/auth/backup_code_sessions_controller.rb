@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class Auth::BackupCodeSessionsController < ApplicationController
+  def index
+    redirect_to action: :new
+  end
+
   def new
     return redirect_to(after_sign_in_path_for(resource)) if user_signed_in?
     return redirect_to(:new_user_session) unless session[:otp_user_id]
