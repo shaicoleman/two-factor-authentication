@@ -1,8 +1,4 @@
 class Auth::TwoFactorsController < ApplicationController
-  def index
-    redirect_to action: :new
-  end
-
   def new
     @otp_secret = OtpService.generate_otp_secret(user: current_user)
     @otp_form = OtpForm.new

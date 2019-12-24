@@ -6,7 +6,7 @@ Rails.application.routes.draw do
                                     sessions: "users/sessions" }
 
   namespace :auth do
-    resource :two_factors, only: [:index, :new, :create, :edit, :destroy]
+    resource :two_factors, only: [:new, :create, :edit, :destroy]
     resources :otp_sessions, only: [:index, :new, :create]
     resources :backup_code_sessions, only: [:index, :new, :create]
     resources :backup_codes, only: [:index, :create]
