@@ -4,14 +4,14 @@
 
     <p>Enter one of your 8-digit backup codes</p>
 
-    <%= simple_form_for(@backup_code_form, url: user_backup_code_session_path, html: { id: "step-2" } ) do |f| %>
+    <%= simple_form_for(@backup_code_form, url: auth_backup_code_sessions_path, html: { id: "step-2" } ) do |f| %>
     <%= f.error_notification %>
 
       <div class="form-group">
         <%= f.input :backup_code_attempt, placeholder: 'Backup Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
       </div>
 
-      <% if devise_mapping.rememberable? -%>
+      <% if :rememberable.in?(User.devise_modules) -%>
         <div class="form-check">
           <label class="form-check-label">
             <%= f.check_box :remember_me, class: "form-check-input" %>

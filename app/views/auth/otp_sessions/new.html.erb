@@ -10,7 +10,7 @@
         <%= f.input :otp_attempt, placeholder: '2FA Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
       </div>
 
-      <% if 'devise_mapping.rememberable?' -%>
+      <% if :rememberable.in?(User.devise_modules) -%>
         <div class="form-check">
           <label class="form-check-label">
             <%= f.check_box :remember_me, class: "form-check-input" %>
@@ -25,7 +25,7 @@
     <% end %>
 
     <div class="text-center">
-      <%= link_to 'Log in with a backup code', :new_user_backup_code_session %>
+      <%= link_to 'Log in with a backup code', :new_auth_backup_code_session %>
     </div>
 
     <div class="text-center">
