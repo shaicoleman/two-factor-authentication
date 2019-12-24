@@ -20,7 +20,7 @@
     <div class="card-body">
       <h5 class="card-title">Backup codes</h5>
       <p class="card-text"><%= OtpService.remaining_backup_codes(user: current_user) %> codes available</p>
-      <%= link_to "View backup codes", :user_backup_codes, class: 'btn btn-primary' %>
+      <%= link_to "View backup codes", :auth_backup_codes, class: 'btn btn-primary' %>
     </div>
   </div>
 </div>
