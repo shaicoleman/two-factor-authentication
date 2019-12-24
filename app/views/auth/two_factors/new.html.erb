@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <%= simple_form_for(@otp_form, url: user_two_factors_path, html: { id: "step-2" } ) do |f| %>
+      <%= simple_form_for(@otp_form, url: auth_two_factors_path, html: { id: "step-2" } ) do |f| %>
       <%= f.error_notification %>
         <br>
         <p>Enter the code given from the Authenticator App</p>

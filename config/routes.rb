@@ -6,18 +6,10 @@ Rails.application.routes.draw do
                                     sessions: "users/sessions" }
 
   namespace :auth do
+    resource :two_factors, only: [:index, :new, :create, :edit, :destroy]
     resources :otp_sessions, only: [:index, :new, :create]
     resources :backup_code_sessions, only: [:index, :new, :create]
     resources :backup_codes, only: [:index, :create]
-  end
-
-  devise_scope :user do
-    scope controller: 'users/two_factors' do
-      get    '/users/two_factors/new', action: :new, as: :new_user_two_factors
-      post   '/users/two_factors/new', action: :create, as: :user_two_factors
-      get    '/users/two_factors/edit', action: :edit, as: :edit_user_two_factors
-      delete '/users/two_factors', action: :destroy
-    end
   end
 
   # Admin
