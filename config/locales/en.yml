@@ -43,7 +43,7 @@ en:
       backup_code_already_used_error: "has already been used"
       log_in_with_backup_code: "Log in with a backup code"
     backup_codes:
-      title: "Save your backup codes"
+      save_backup_codes: "Save your backup codes"
       info_1: "Backup codes let you access your account if your phone is lost, damaged or stolen."
       info_2: "We ask you to print this list and keep it in a safe place or save it securely using a password manager."
       get_new_codes: "Get new codes"
@@ -53,3 +53,10 @@ en:
       print: "Print"
       download: "Download"
       copy: "Copy"
+    two_factors:
+      two_factor_authentication: "Two-Factor Authentication"
+      confirm_disable: "Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in."
+      backup_codes: "Backup codes"
+      backup_codes_available:
+        one: "%{count} code available"
+        other: "%{count} codes available"

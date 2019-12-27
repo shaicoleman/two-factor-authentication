@@ -53,7 +53,7 @@ class OtpService
     codes
   end
 
-  def self.remaining_backup_codes(user:)
+  def self.backup_codes_available(user:)
     user.otp_backup_codes&.count { |code| !code.starts_with?('!') } || 0
   end
 

@@ -1,14 +1,15 @@
 <div class="row">
   <div class="card w-100">
     <div class="card-body">
-      <h5 class="card-title">Two-Factor Authentication</h5>
+      <h5 class="card-title"><%= I18n.t('auth.two_factors.two_factor_authentication') %></h5>
       <% if current_user.otp_required_for_login? %>
-        <p class="card-text">✔️ On - Added <%= current_user.otp_updated_at&.strftime('%d %b %Y') %></p>
-        <div><%= link_to "Disable Authenticator", :auth_two_factors, method: :delete, class: "btn btn-danger", data: { confirm: 'Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in.' } %></div>
+        <p class="card-text">✔️ 2FA is enabled since <%= current_user.otp_updated_at&.strftime('%d %b %Y') %></p>
+        <div><%= link_to "Disable Authenticator", :auth_two_factors, method: :delete, class: "btn btn-danger",
+                                                  data: { confirm: I18n.t('auth.two_factors.confirm_disable') } %></div>
 
       <% else %>
         <p>Increase your account's security by enabling Two-Factor Authentication (2FA)</p>
-        <p class="card-text">❌ Off</p>
+        <p class="card-text">❌ 2FA is disabled</p>
         <%= link_to 'Enable two-factor authentication', :new_user_two_factors, class: 'btn btn-success' %>
       <% end %>
     </div>
@@ -18,8 +19,8 @@
 <div class="row">
   <div class="card w-100">
     <div class="card-body">
-      <h5 class="card-title">Backup codes</h5>
-      <p class="card-text"><%= OtpService.remaining_backup_codes(user: current_user) %> codes available</p>
+      <h5 class="card-title"><%= I18n.t('auth.two_factors.backup_codes') %></h5>
+      <p class="card-text"><%= I18n.t('auth.two_factors.backup_codes_available', count: OtpService.backup_codes_available(user: current_user)) %></p>
       <%= link_to "View backup codes", :auth_backup_codes, class: 'btn btn-primary' %>
     </div>
   </div>
