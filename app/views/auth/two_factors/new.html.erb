@@ -11,12 +11,12 @@
   <div class="card w-50">
     <div class="card-body">
       <h5 class="card-title">Step 2: Scan barcode</h5>
-      <p class="card-text">In the app, select "Set up account" or the Plus (+) sign.</p>
-      <p class="card-text">Choose "Scan barcode"</p>
+      <p class="card-text">In the app, press the Plus (+) sign to set up an account.</p>
+      <p class="card-text">Choose "Scan a barcode"</p>
 
       <%= OtpService.otp_qr_code(user: current_user) %>
       <br><br>
-      <h5 class="card-title">Can't scan the code?</h5>
+      <h5 class="card-title">Can't scan the barcode?</h5>
       <p class="card-text">Enter manually the following time-based key on the authenticator app</p>
       <code><%= OtpService.format_otp_secret(current_user.otp_secret) %></code>
       </dl>
