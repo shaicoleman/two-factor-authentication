@@ -70,5 +70,8 @@ en:
       is_disabled: "2FA is disabled"
       is_enabled: "2FA is enabled since %{date}"
       step_1: "Step 1: Get an Authenticator app"
+      download_authenticator: "Download Google Authenticator for %{android_link} or %{ios_link}"
+      android: "Android"
+      ios: "iOS"
       step_2: "Step 2: Scan barcode"
       step_3: "Step 3: Enter authenticator code"

@@ -2,8 +2,10 @@
   <div class="card w-50">
     <div class="card-body">
       <h5 class="card-title"><%= I18n.t('auth.two_factors.step_1') %></h5>
-      <p class="card-text">Download Google Authenticator for <%= link_to "Android", "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2", target: :blank %>
-            or <%= link_to "iOS", "https://apps.apple.com/us/app/google-authenticator/id388497605", target: :blank %></p>
+      <p class="card-text"><%= I18n.t('auth.two_factors.download_authenticator',
+        android_link: link_to(I18n.t('auth.two_factors.android'), 'https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2', target: :blank),
+        ios_link: link_to(I18n.t('auth.two_factors.ios'), 'https://apps.apple.com/us/app/google-authenticator/id388497605', target: :blank),
+      ).html_safe %></p>
     </div>
   </div>
 </div>
@@ -11,8 +13,11 @@
   <div class="card w-50">
     <div class="card-body">
       <h5 class="card-title"><%= I18n.t('auth.two_factors.step_2') %></h5>
-      <p class="card-text">In the app, press the Plus (+) sign to set up an account.</p>
-      <p class="card-text">Choose "Scan a barcode"</p>
+      <p>Open the authenticator app and:</p>
+      <ul>
+        <li>Tap the "+" icon</li>
+        <li>Choose "Scan a barcode"</li>
+      </ul>
 
       <%= OtpService.otp_qr_code(user: current_user) %>
       <br><br>
