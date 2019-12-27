@@ -3,7 +3,7 @@ class OtpService
   DRIFT = 30.seconds
 
   def self.otp_qr_code(user:)
-    otpauth_url = ROTP::TOTP.new(user.otp_secret, { issuer: ISSUER }).provisioning_uri("#{ISSUER}:#{user.email}")
+    otpauth_url = ROTP::TOTP.new(user.otp_secret, { issuer: ISSUER }).provisioning_uri(user.email)
     qrcode = RQRCode::QRCode.new(otpauth_url, level: :l)
     qrcode.as_svg(module_size: 4).html_safe
   end
@@ -60,9 +60,5 @@ class OtpService
     return 'Already used' if code.starts_with?('!')
 
     code&.gsub(/(.{4})(?=.)/, '\1 \2') || 'Error'
-  end
-
-  def self.label(user:)
-    "#{ISSUER}:#{user.email}"
   end
 end
