@@ -32,13 +32,16 @@
 en:
   hello: "Hello world"
   auth:
-    two_factors:
-      log_in_with_authenticator: "Log in with Authenticator"
-      log_in_with_backup_code: "Log in with a backup code"
+    otp_sessions:
       enter_authenticator_code: "Enter Authenticator Code"
       enter_authenticator_code_detail: "Enter the 6-digit code from the Authenticator App"
+      otp_code_already_used_error: "has already been used. Please wait for a new code"
+      log_in_with_authenticator: "Log in with an Authenticator App"
+    backup_code_sessions:
       enter_backup_code: "Enter Backup Code"
       enter_backup_code_detail: "Enter one of your 8-digit backup codes"
-      otp_code_already_used_error: "has already been used. Please wait for a new code"
       backup_code_already_used_error: "has already been used"
-      backup_code_already_used: 'Already used'
+      log_in_with_backup_code: "Log in with a backup code"
+    backup_codes:
+      already_used: 'Already used'
+

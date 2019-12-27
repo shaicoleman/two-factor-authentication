@@ -16,7 +16,7 @@ class OtpService
       return I18n.t('errors.messages.invalid')
     end
     if user.consumed_timestep.to_i >= matching_timestep
-      return I18n.t('auth.two_factors.otp_code_already_used_error')
+      return I18n.t('auth.otp_sessions.otp_code_already_used_error')
     end
     user.update!(failed_otp_attempts: 0, failed_backup_code_attempts: 0, consumed_timestep: matching_timestep)
     :success
@@ -24,7 +24,7 @@ class OtpService
 
   def self.attempt_backup_code(user:, backup_code_attempt:)
     if "!#{backup_code_attempt}".in?(user.otp_backup_codes)
-      return I18n.t('auth.two_factors.backup_code_already_used_error')
+      return I18n.t('auth.backup_code_sessions.backup_code_already_used_error')
     end
     unless backup_code_attempt.in?(user.otp_backup_codes)
       user.class.increment_counter(:failed_backup_code_attempts, user.id)
@@ -57,7 +57,7 @@ class OtpService
   end
 
   def self.format_backup_code(code)
-    return I18n.t('auth.two_factors.backup_code_already_used') if code.starts_with?('!')
+    return I18n.t('auth.backup_codes.already_used') if code.starts_with?('!')
 
     code&.gsub(/(.{4})(?=.)/, '\1 \2') || I18n.t('errors.messages.invalid')
   end
