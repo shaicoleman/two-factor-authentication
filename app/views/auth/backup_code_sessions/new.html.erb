@@ -7,7 +7,7 @@
     <%= f.error_notification %>
 
       <div class="form-group">
-        <%= f.input :backup_code_attempt, placeholder: 'Backup Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
+        <%= f.input :backup_code_attempt, placeholder: 'Backup Code', input_html: { autocomplete: 'off', autofocus: true }, class: 'form-control' %>
       </div>
 
       <% if :rememberable.in?(User.devise_modules) -%>
