@@ -17,16 +17,8 @@
       <%= OtpService.otp_qr_code(user: current_user) %>
       <br><br>
       <h5 class="card-title">Can't scan the code?</h5>
-      <p class="card-text">To add the entry manually, provide the following details to the application on your phone.</p>
-      <dl>
-        <dt>Account:</dt>
-        <dd><%= OtpService::ISSUER %>:<%= current_user.email %></dd>
-
-        <dt>Key</dt>
-        <dd><code><%= OtpService.format_otp_secret(current_user.otp_secret) %></code></dd>
-
-        <dt>Time-based</dt>
-        <dd>Yes</dd>
+      <p class="card-text">Enter manually the following time-based key on the authenticator app</p>
+      <code><%= OtpService.format_otp_secret(current_user.otp_secret) %></code>
       </dl>
     </div>
   </div>
