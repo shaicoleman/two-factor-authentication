@@ -1,47 +1,44 @@
 <div class="row">
-  <div class="col-lg-4 col-md-6 ml-auto mr-auto">
-    <h2>Set up 2FA</h2>
+  <div class="card w-50">
+    <div class="card-body">
+      <h5 class="card-title">Step 1: Get an Authenticator app</h5>
+      <p class="card-text">Download Google Authenticator for <%= link_to "Android", "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2", target: :blank %>
+            or <%= link_to "iOS", "https://apps.apple.com/us/app/google-authenticator/id388497605", target: :blank %></p>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="card w-50">
+    <div class="card-body">
+      <h5 class="card-title">Step 2: Scan barcode</h5>
+      <p class="card-text">In the app, select "Set up account" or the Plus (+) sign.</p>
+      <p class="card-text">Choose "Scan barcode"</p>
 
-    <div class="row">
-      <div class="col-8">
-        <ol class="mt-5">
-          <li>
-            Install Google Authenticator:
-            <%= link_to "Android", "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2", target: :blank %>
-            or
-            <%= link_to "iOS", "https://apps.apple.com/us/app/google-authenticator/id388497605", target: :blank %>
-          </li>
-          <li>In the app, select "Set up account" or the Plus (+) sign.</li>
-          <li>Choose "Scan barcode"</li>
-        </ol>
-      </div>
+      <%= OtpService.otp_qr_code(user: current_user) %>
+      <br><br>
+      <h5 class="card-title">Can't scan the code?</h5>
+      <p class="card-text">To add the entry manually, provide the following details to the application on your phone.</p>
+      <dl>
+        <dt>Account:</dt>
+        <dd><%= OtpService::ISSUER %>:<%= current_user.email %></dd>
 
-      <div class="col-4 text-center">
-        <%= OtpService.otp_qr_code(user: current_user) %>
-      </div>
+        <dt>Key</dt>
+        <dd><code><%= OtpService.format_otp_secret(current_user.otp_secret) %></code></dd>
 
-      <div class="card bg-light">
-        <div class="card-body">
-          <h5 class="card-title">Can't scan the code?</h5>
-          <p>To add the entry manually, provide the following details to the application on your phone.</p>
-          <dl>
-            <dt>Account:</dt>
-            <dd><%= OtpService::ISSUER %>:<%= current_user.email %></dd>
-
-            <dt>Key</dt>
-            <dd><code><%= OtpService.format_otp_secret(current_user.otp_secret) %></code></dd>
-
-            <dt>Time-based</dt>
-            <dd>Yes</dd>
-          </dl>
-        </div>
-      </div>
+        <dt>Time-based</dt>
+        <dd>Yes</dd>
+      </dl>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="card w-50">
+    <div class="card-body">
+      <h5 class="card-title">Step 3: Enter authenticator code</h5>
+      <p class="card-text">Enter the code given from the Authenticator App</p>
 
       <%= simple_form_for(@otp_form, url: auth_two_factors_path, html: { id: "step-2" } ) do |f| %>
       <%= f.error_notification %>
-        <br>
-        <p>Enter the code given from the Authenticator App</p>
-
         <div class="form-group">
           <%= f.input :otp_attempt, placeholder: '2FA Code', input_html: { autocomplete: 'off' }, class: 'form-control' %>
         </div>
@@ -49,8 +46,9 @@
         <div class="form-group">
           <%= f.submit "Enable Two Factor Authenticaton", class: "btn btn-primary btn-block btn-lg" %>
         </div>
+
+        <%= link_to "Back", :edit_user_registration, class: "btn btn-primary" %>
       <% end %>
     </div>
-    <%= link_to "Back", :edit_user_registration, class: "btn btn-primary" %>
   </div>
 </div>
