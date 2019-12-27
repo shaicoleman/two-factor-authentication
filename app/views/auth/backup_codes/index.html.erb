@@ -11,11 +11,11 @@
 
 These codes were generated on: <%= current_user.otp_backup_codes_updated_at&.strftime('%d %b %Y') %>
 
-<div><%= link_to "Get new codes", :auth_backup_codes, method: :post, class: "btn btn-primary", data: { confirm: I18n.t('auth.backup_codes.confirm_new_codes') } %></div>
+<div><%= link_to I18n.t('auth.backup_codes.get_new_codes'), :auth_backup_codes, method: :post, class: "btn btn-primary", data: { confirm: I18n.t('auth.backup_codes.confirm_new_codes') } %></div>
 <br>
-<%= link_to "Print", '#', class: "btn btn-primary disabled" %>
-<%= link_to "Download", '#', class: "btn btn-primary disabled" %>
-<%= link_to "Copy", '#', class: "btn btn-primary disabled" %>
+<%= link_to I18n.t('auth.backup_codes.print'), '#', class: "btn btn-primary disabled" %>
+<%= link_to I18n.t('auth.backup_codes.download'), '#', class: "btn btn-primary disabled" %>
+<%= link_to I18n.t('auth.backup_codes.copy'), '#', class: "btn btn-primary disabled" %>
 
 <%= link_to "Back", :edit_auth_two_factors, class: "btn btn-primary" %>
 
