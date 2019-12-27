@@ -57,6 +57,12 @@ en:
       two_factor_authentication: "Two-Factor Authentication"
       confirm_disable: "Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in."
       backup_codes: "Backup codes"
+      view_backup_codes: "View backup codes"
       backup_codes_available:
         one: "%{count} code available"
         other: "%{count} codes available"
+      disable_2fa: "Disable two-factor authentication"
+      enable_2fa: "Enable two-factor authentication"
+      manage_2fa: "Manage two-factor authentication"
+      is_disabled: "2FA is disabled"
+      is_enabled: "2FA is enabled since %{date}"
