@@ -13,16 +13,16 @@
   <div class="card w-50">
     <div class="card-body">
       <h5 class="card-title"><%= I18n.t('auth.two_factors.step_2') %></h5>
-      <p>Open the authenticator app and:</p>
+      <p><%= I18n.t('auth.two_factors.open_authenticator') %></p>
       <ul>
-        <li>Tap the "+" icon</li>
-        <li>Choose "Scan a barcode"</li>
+        <li><%= I18n.t('auth.two_factors.tap_plus') %></li>
+        <li><%= I18n.t('auth.two_factors.scan_barcode') %></li>
       </ul>
 
       <%= OtpService.otp_qr_code(user: current_user) %>
       <br><br>
-      <h5 class="card-title">Can't scan the barcode?</h5>
-      <p class="card-text">Enter manually the following time-based key on the authenticator app</p>
+      <h5 class="card-title"><%= I18n.t('auth.two_factors.cant_scan_barcode') %></h5>
+      <p class="card-text"><%= I18n.t('auth.two_factors.enter_manually_code') %></p>
       <code><%= OtpService.format_otp_secret(current_user.otp_secret) %></code>
       </dl>
     </div>
@@ -32,7 +32,7 @@
   <div class="card w-50">
     <div class="card-body">
       <h5 class="card-title"><%= I18n.t('auth.two_factors.step_3') %></h5>
-      <p class="card-text">Enter the code given from the Authenticator App</p>
+      <p class="card-text"><%= I18n.t('auth.otp_sessions.enter_authenticator_code_detail') %></p>
 
       <%= simple_form_for(@otp_form, url: auth_two_factors_path, html: { id: "step-2" } ) do |f| %>
       <%= f.error_notification %>

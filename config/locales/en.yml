@@ -35,9 +35,9 @@ en:
     otp_sessions:
       authenticator_code: "Authenticator Code"
       enter_authenticator_code: "Enter Authenticator Code"
-      enter_authenticator_code_detail: "Enter the 6-digit code from the Authenticator App"
+      enter_authenticator_code_detail: "Enter the 6-digit code from the Authenticator app"
       otp_code_already_used_error: "has already been used. Please wait for a new code"
-      log_in_with_authenticator: "Log in with an Authenticator App"
+      log_in_with_authenticator: "Log in with an Authenticator app"
     backup_code_sessions:
       backup_code: "Backup Code"
       enter_backup_code: "Enter Backup Code"
@@ -74,4 +74,9 @@ en:
       android: "Android"
       ios: "iOS"
       step_2: "Step 2: Scan barcode"
+      open_authenticator: "Open the Authenticator app and:"
+      tap_plus: 'Tap the "+" icon'
+      scan_barcode: 'Choose "Scan a barcode"'
+      cant_scan_barcode: "Can't scan the barcode?"
+      enter_manually_code: "Enter manually the following time-based key on the Authenticator app"
       step_3: "Step 3: Enter authenticator code"
