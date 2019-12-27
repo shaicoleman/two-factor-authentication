@@ -19,6 +19,7 @@ class Auth::TwoFactorsController < ApplicationController
   end
 
   def edit
+    return redirect_to :new_auth_two_factors unless current_user.otp_required_for_login
   end
 
   def destroy

@@ -2,16 +2,9 @@
   <div class="card w-100">
     <div class="card-body">
       <h5 class="card-title"><%= I18n.t('auth.two_factors.two_factor_authentication') %></h5>
-      <% if current_user.otp_required_for_login? %>
-        <p class="card-text">✔️ <%= I18n.t('auth.two_factors.is_enabled', date: current_user.otp_updated_at&.strftime('%d %b %Y')) %>
-        <div><%= link_to I18n.t('auth.two_factors.disable_2fa'), :auth_two_factors, method: :delete, class: "btn btn-danger",
-                                                  data: { confirm: I18n.t('auth.two_factors.confirm_disable') } %></div>
-
-      <% else %>
-        <p><%= I18n.t('auth.two_factors.enable_2fa_recommendation') %>
-        <p class="card-text">❌ <%= I18n.t('auth.two_factors.is_disabled') %></p>
-        <%= link_to I18n.t('auth.two_factors.enable_2fa'), :new_user_two_factors, class: 'btn btn-success' %>
-      <% end %>
+      <p class="card-text">✔️ <%= I18n.t('auth.two_factors.is_enabled', date: current_user.otp_updated_at&.strftime('%d %b %Y')) %>
+      <div><%= link_to I18n.t('auth.two_factors.disable_2fa'), :auth_two_factors, method: :delete, class: "btn btn-danger",
+                                                data: { confirm: I18n.t('auth.two_factors.confirm_disable') } %></div>
     </div>
   </div>
 </div>
