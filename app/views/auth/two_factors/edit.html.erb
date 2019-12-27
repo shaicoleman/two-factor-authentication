@@ -8,7 +8,7 @@
                                                   data: { confirm: I18n.t('auth.two_factors.confirm_disable') } %></div>
 
       <% else %>
-        <p>Increase your account's security by enabling Two-Factor Authentication (2FA)</p>
+        <p><%= I18n.t('auth.two_factors.enable_2fa_recommendation') %>
         <p class="card-text">❌ <%= I18n.t('auth.two_factors.is_disabled') %></p>
         <%= link_to I18n.t('auth.two_factors.enable_2fa'), :new_user_two_factors, class: 'btn btn-success' %>
       <% end %>

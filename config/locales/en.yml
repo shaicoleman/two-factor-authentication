@@ -63,6 +63,7 @@ en:
         other: "%{count} codes available"
       disable_2fa: "Disable two-factor authentication"
       enable_2fa: "Enable two-factor authentication"
+      enable_2fa_recommendation: "Increase your account's security by enabling Two-Factor Authentication (2FA)"
       manage_2fa: "Manage two-factor authentication"
       is_disabled: "2FA is disabled"
       is_enabled: "2FA is enabled since %{date}"
