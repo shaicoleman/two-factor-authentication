@@ -31,6 +31,8 @@
 
 en:
   hello: "Hello world"
-  two_factors:
-    otp_code_already_used: "has already been used. Please wait for a new code"
-    backup_code_already_used: "has already been used"
+  auth:
+    two_factors:
+      otp_code_already_used_error: "has already been used. Please wait for a new code"
+      backup_code_already_used_error: "has already been used"
+      backup_code_already_used: 'Already used'
