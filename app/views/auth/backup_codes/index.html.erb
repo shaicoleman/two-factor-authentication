@@ -24,10 +24,17 @@
 <script>
   function copy_codes(event) {
     var backup_codes_data = JSON.parse(document.getElementById("backup_codes_data").textContent);
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(backup_codes_data);
-    }
+    var el = document.getElementById('copy_codes');
+    navigator.clipboard.writeText(backup_codes_data);
+    $(el).tooltip({ title: "Copied!", trigger: "manual" });
+    $(el).tooltip('show');
+    setTimeout(function() {
+      $(el).tooltip('hide');
+    }, 1000);
     event.preventDefault();
+  }
+  if (!navigator.clipboard) {
+    document.getElementById('copy_codes').style.display = 'none';
   }
   document.getElementById('copy_codes').addEventListener('click', copy_codes);
 </script>
