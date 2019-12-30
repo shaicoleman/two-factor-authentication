@@ -3,7 +3,8 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   # Devise
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks",
-                                    sessions: "users/sessions" }
+                                    sessions: "users/sessions",
+                                    passwords: "users/passwords" }
 
   namespace :auth do
     resource :two_factors, only: [:new, :create, :edit, :destroy]
