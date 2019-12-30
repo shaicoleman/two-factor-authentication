@@ -7,9 +7,12 @@ Rails.application.routes.draw do
 
   namespace :auth do
     resource :two_factors, only: [:new, :create, :edit, :destroy]
-    resources :otp_sessions, only: [:index, :new, :create]
-    resources :backup_code_sessions, only: [:index, :new, :create]
+    resources :otp_sessions, only: [:new, :create]
+    resources :backup_code_sessions, only: [:new, :create]
     resources :backup_codes, only: [:index, :create]
+    get '/two_factors', to: redirect('/auth/two_factors/new')
+    get '/otp_sessions', to: redirect('/auth/otp_sessions/new')
+    get '/backup_code_sessions', to: redirect('/auth/backup_code_sessions/new')
   end
 
   # Admin
