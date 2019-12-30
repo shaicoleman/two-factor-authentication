@@ -1,6 +1,8 @@
 class OtpService
   ISSUER = 'OTPExample'
   DRIFT = 30.seconds
+  MAX_FAILED_OTP_ATTEMPTS = 12
+  MAX_FAILED_BACKUP_CODE_ATTEMPTS = 12
 
   def self.otp_qr_code(issuer: ISSUER, user:)
     otpauth_url = ROTP::TOTP.new(user.otp_secret, { issuer: issuer }).provisioning_uri(user.email)
@@ -14,6 +16,9 @@ class OtpService
   end
 
   def self.attempt_otp(user:, otp_attempt:, ignore_failed: false)
+    if user.failed_otp_attempts >= MAX_FAILED_OTP_ATTEMPTS
+      return I18n.t('auth.too_many_failed_attempts')
+    end
     otp = ROTP::TOTP.new(user.otp_secret)
     matching_timestep = otp.verify(otp_attempt, drift_behind: DRIFT)&.div(otp.interval)
     unless matching_timestep
@@ -28,6 +33,9 @@ class OtpService
   end
 
   def self.attempt_backup_code(user:, backup_code_attempt:)
+    if user.failed_backup_code_attempts >= MAX_FAILED_BACKUP_CODE_ATTEMPTS
+      return I18n.t('auth.too_many_failed_attempts')
+    end
     if "!#{backup_code_attempt}".in?(user.otp_backup_codes)
       return I18n.t('auth.backup_code_sessions.backup_code_already_used_error')
     end

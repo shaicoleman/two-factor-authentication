@@ -34,6 +34,7 @@ en:
   auth:
     remember_me: "Remember me"
     log_in: "Log in"
+    too_many_failed_attempts: "Too many failed attempts"
     otp_sessions:
       authenticator_code: "Authenticator Code"
       enter_authenticator_code: "Enter Authenticator Code"
