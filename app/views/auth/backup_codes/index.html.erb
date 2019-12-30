@@ -16,16 +16,17 @@
 
 <%= link_to I18n.t('auth.backup_codes.print'), :auth_backup_codes_print, class: "btn btn-primary", target: :blank %>
 <%= link_to I18n.t('auth.backup_codes.download'), :auth_backup_codes_download, class: "btn btn-primary" %>
-<%= link_to I18n.t('auth.backup_codes.copy'), '#', class: "btn btn-primary", id: 'copy_codes',
+<%= link_to I18n.t('auth.backup_codes.copy'), '#', class: "btn btn-primary", id: 'copy-button',
                                                    data: { text: render(template: 'auth/backup_codes/download.text'),
                                                            copied: I18n.t('auth.backup_codes.copied') } %>
 
+<%# Copy to clipboard is only supported over HTTPS %>
 <script>
   function copy_codes(event) {
-    var el = document.getElementById('copy_codes');
+    var el = document.getElementById('copy-button');
     var backup_codes_data = el.getAttribute('data-text');
     navigator.clipboard.writeText(backup_codes_data);
-    $(el).tooltip({ title: el.getAttribute('data-copied'), trigger: "manual" });
+    $(el).tooltip({ title: el.getAttribute('data-copied'), trigger: 'manual' });
     $(el).tooltip('show');
     setTimeout(function() {
       $(el).tooltip('hide');
@@ -33,9 +34,9 @@
     event.preventDefault();
   }
   if (!navigator.clipboard) {
-    document.getElementById('copy_codes').style.display = 'none';
+    document.getElementById('copy-button').style.display = 'none';
   }
-  document.getElementById('copy_codes').addEventListener('click', copy_codes);
+  document.getElementById('copy-button').addEventListener('click', copy_codes);
 </script>
 
 <%= link_to "Back", :edit_auth_two_factors, class: "btn btn-primary" %>
