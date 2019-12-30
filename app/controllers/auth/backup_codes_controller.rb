@@ -8,4 +8,9 @@ class Auth::BackupCodesController < ApplicationController
     OtpService.generate_backup_codes(user: current_user)
     redirect_to action: :index
   end
+
+  def print
+    @backup_codes = current_user.otp_backup_codes
+    render layout: false
+  end
 end
