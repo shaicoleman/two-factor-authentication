@@ -32,6 +32,8 @@
 en:
   hello: "Hello world"
   auth:
+    remember_me: "Remember me"
+    log_in: "Log in"
     otp_sessions:
       authenticator_code: "Authenticator Code"
       enter_authenticator_code: "Enter Authenticator Code"

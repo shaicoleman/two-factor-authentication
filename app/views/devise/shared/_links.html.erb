@@ -1,5 +1,5 @@
 <%- if controller_name != 'sessions' %>
-  <%= link_to "Log in", :new_user_session %><br />
+  <%= link_to I18n.t('auth.log_in'), :new_user_session %><br />
 <% end -%>
 
 <%- if :registerable.in?(User.devise_modules) && controller_name != 'registrations' %>
