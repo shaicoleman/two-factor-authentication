@@ -37,7 +37,7 @@
       <%= simple_form_for(@otp_form, url: auth_two_factors_path, html: { id: "step-2" } ) do |f| %>
       <%= f.error_notification %>
         <div class="form-group">
-          <%= f.input :otp_attempt, placeholder: I18n.t('auth.otp_sessions.authenticator_code'), input_html: { autocomplete: 'off' }, class: 'form-control' %>
+          <%= f.input :otp_attempt, placeholder: I18n.t('auth.otp_sessions.authenticator_code'), input_html: { autocomplete: 'off', autofocus: true }, class: 'form-control' %>
         </div>
 
         <div class="form-group">
