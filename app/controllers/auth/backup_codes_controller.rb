@@ -11,6 +11,6 @@ class Auth::BackupCodesController < ApplicationController
 
   def print
     @backup_codes = current_user.otp_backup_codes
-    render layout: false
+    render layout: 'print'
   end
 end
