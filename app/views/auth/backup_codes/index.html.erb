@@ -13,20 +13,19 @@
 
 <div><%= link_to I18n.t('auth.backup_codes.get_new_codes'), :auth_backup_codes, method: :post, class: "btn btn-primary", data: { confirm: I18n.t('auth.backup_codes.confirm_new_codes') } %></div>
 <br>
-<script type="application/json" id="backup_codes_data">
-  "<%= escape_javascript(render template: 'auth/backup_codes/download.text') %>"
-</script>
 
 <%= link_to I18n.t('auth.backup_codes.print'), :auth_backup_codes_print, class: "btn btn-primary", target: :blank %>
 <%= link_to I18n.t('auth.backup_codes.download'), :auth_backup_codes_download, class: "btn btn-primary" %>
-<%= link_to I18n.t('auth.backup_codes.copy'), '#', class: "btn btn-primary", id: 'copy_codes' %>
+<%= link_to I18n.t('auth.backup_codes.copy'), '#', class: "btn btn-primary", id: 'copy_codes',
+                                                   data: { text: render(template: 'auth/backup_codes/download.text'),
+                                                           copied: I18n.t('auth.backup_codes.copied') } %>
 
 <script>
   function copy_codes(event) {
-    var backup_codes_data = JSON.parse(document.getElementById("backup_codes_data").textContent);
     var el = document.getElementById('copy_codes');
+    var backup_codes_data = el.getAttribute('data-text');
     navigator.clipboard.writeText(backup_codes_data);
-    $(el).tooltip({ title: "Copied!", trigger: "manual" });
+    $(el).tooltip({ title: el.getAttribute('data-copied'), trigger: "manual" });
     $(el).tooltip('show');
     setTimeout(function() {
       $(el).tooltip('hide');

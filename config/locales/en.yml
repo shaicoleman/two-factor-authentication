@@ -57,6 +57,7 @@ en:
       print: "Print"
       download: "Download"
       copy: "Copy"
+      copied: "Copied!"
     two_factors:
       two_factor_authentication: "Two-Factor Authentication"
       confirm_disable: "Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in."
