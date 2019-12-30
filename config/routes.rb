@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     resources :backup_code_sessions, only: [:new, :create]
     resources :backup_codes, only: [:index, :create]
     get '/backup_codes/print', to: 'backup_codes#print'
+    get '/backup_codes/download', to: 'backup_codes#download'
     get '/two_factors', to: redirect('/auth/two_factors/new')
     get '/otp_sessions', to: redirect('/auth/otp_sessions/new')
     get '/backup_code_sessions', to: redirect('/auth/backup_code_sessions/new')

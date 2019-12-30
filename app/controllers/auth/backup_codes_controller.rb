@@ -13,4 +13,10 @@ class Auth::BackupCodesController < ApplicationController
     @backup_codes = current_user.otp_backup_codes
     render layout: 'print'
   end
+
+  def download
+    @backup_codes = current_user.otp_backup_codes
+    txt = render_to_string(template: 'auth/backup_codes/download.text')
+    send_data txt, type: 'text/plain; charset=UTF-8', filename: 'backup_codes.txt'
+  end
 end

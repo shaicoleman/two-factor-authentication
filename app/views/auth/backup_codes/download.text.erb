@@ -1,0 +1,10 @@
+<%= I18n.t('auth.backup_codes.save_backup_codes') %>
+
+<%= I18n.t('auth.backup_codes.info_1') %>
+<%= I18n.t('auth.backup_codes.info_2') %>
+
+<% @backup_codes.each do |backup_code| %>
+<%= OtpService.format_backup_code(backup_code) %>
+<% end %>
+
+<%= I18n.t('auth.backup_codes.backup_codes_generated_on', date: current_user.otp_backup_codes_updated_at&.strftime('%d %b %Y')) %>
