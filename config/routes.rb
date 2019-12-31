@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   # Devise
-  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks",
-                                    sessions: "users/sessions",
+  devise_for :users, controllers: { sessions: "users/sessions",
                                     passwords: "users/passwords" }
 
   namespace :auth do
