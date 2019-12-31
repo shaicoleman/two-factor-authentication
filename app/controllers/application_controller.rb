@@ -14,13 +14,7 @@ class ApplicationController < ActionController::Base
 
   def require_2fa
     return unless user_signed_in?
-    return if current_user.otp_required_for_login?
-    return unless OtpService::REQUIRE_2FA
-
-    current_user.update!(otp_grace_period_started_at: Time.now.utc) if current_user.otp_grace_period_started_at.blank?
-
-    if Time.now.utc > current_user.otp_grace_period_started_at + OtpService::GRACE_PERIOD
-      return redirect_to(:new_auth_two_factors)
-    end
+    enforcement_status = OtpService.check_enforcement_status(user: current_user)
+    redirect_to(:new_auth_two_factors) if enforcement_status == :enforced
   end
 end

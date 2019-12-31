@@ -4,7 +4,7 @@ class OtpService
   MAX_FAILED_OTP_ATTEMPTS = 12
   MAX_FAILED_BACKUP_CODE_ATTEMPTS = 12
   REQUIRE_2FA = true
-  GRACE_PERIOD = 48.hours
+  GRACE_PERIOD = 5.minutes
 
   def self.otp_qr_code(issuer: ISSUER, user:)
     otpauth_url = ROTP::TOTP.new(user.otp_secret, { issuer: issuer }).provisioning_uri(user.email)
@@ -51,6 +51,16 @@ class OtpService
     user.update!(otp_backup_codes: backup_codes, otp_failed_attempts: 0, otp_failed_backup_code_attempts: 0,
                  otp_grace_period_started_at: nil)
     :success
+  end
+
+  def self.check_enforcement_status(user:)
+    return if user.otp_required_for_login?
+    return :not_enforced unless OtpService::REQUIRE_2FA
+
+    user.update!(otp_grace_period_started_at: Time.now.utc) if user.otp_grace_period_started_at.blank?
+
+    return :enforced if Time.now.utc >= user.otp_grace_period_started_at + OtpService::GRACE_PERIOD
+    :grace_period
   end
 
   def self.generate_otp_secret(user:)
