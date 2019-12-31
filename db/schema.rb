@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(version: 2019_12_31_095010) do
     t.datetime "otp_updated_at"
     t.datetime "password_changed_at"
     t.datetime "otp_backup_codes_updated_at"
+    t.datetime "otp_grace_period_started_at"
     t.integer "failed_otp_attempts", default: 0, null: false
     t.integer "failed_backup_code_attempts", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true

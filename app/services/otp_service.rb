@@ -3,6 +3,8 @@ class OtpService
   DRIFT = 30.seconds
   MAX_FAILED_OTP_ATTEMPTS = 12
   MAX_FAILED_BACKUP_CODE_ATTEMPTS = 12
+  REQUIRE_2FA = true
+  GRACE_PERIOD = 48.hours
 
   def self.otp_qr_code(issuer: ISSUER, user:)
     otpauth_url = ROTP::TOTP.new(user.otp_secret, { issuer: issuer }).provisioning_uri(user.email)
