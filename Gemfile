@@ -60,7 +60,7 @@ gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootst
 gem 'devise_masquerade', '~> 0.6.0'
 gem 'font-awesome-sass', '~> 4.7'
 gem 'jquery-rails', '~> 4.3.1'
-gem 'bootstrap', '~> 4.0.0.beta'
+gem 'bootstrap'
 gem 'webpacker', '~> 3.0'
 gem 'sidekiq', '~> 5.0'
 gem 'foreman'
