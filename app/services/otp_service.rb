@@ -55,6 +55,7 @@ class OtpService
 
   def self.check_enforcement_status(user:)
     return if user.otp_required_for_login?
+    return [:already_enabled, nil] if user.otp_required_for_login?
     return [:not_enforced, nil] unless OtpService::REQUIRE_2FA
 
     user.update!(otp_grace_period_started_at: Time.now.utc) if user.otp_grace_period_started_at.blank?

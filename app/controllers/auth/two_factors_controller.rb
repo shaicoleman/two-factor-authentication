@@ -17,6 +17,7 @@ class Auth::TwoFactorsController < ApplicationController
       return render :new
     end
     current_user.update!(otp_required_for_login: true, otp_updated_at: Time.now.utc)
+    session[:otp_enforcement] = :already_enabled
 
     redirect_to :auth_backup_codes
   end
