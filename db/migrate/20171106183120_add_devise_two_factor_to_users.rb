@@ -6,7 +6,7 @@ class AddDeviseTwoFactorToUsers < ActiveRecord::Migration[5.1]
     add_column :users, :encrypted_otp_backup_codes, :string
     add_column :users, :encrypted_otp_backup_codes_iv, :string
 
-    add_column :users, :consumed_timestep, :integer
+    add_column :users, :otp_consumed_timestep, :integer
     add_column :users, :otp_required_for_login, :boolean
     add_column :users, :otp_updated_at, :datetime
     add_column :users, :password_changed_at, :datetime
@@ -14,7 +14,7 @@ class AddDeviseTwoFactorToUsers < ActiveRecord::Migration[5.1]
     add_column :users, :otp_backup_codes_updated_at, :datetime
     add_column :users, :otp_grace_period_started_at, :datetime
 
-    add_column :users, :failed_otp_attempts, :integer, default: 0, null: false
-    add_column :users, :failed_backup_code_attempts, :integer, default: 0, null: false
+    add_column :users, :otp_failed_attempts, :integer, default: 0, null: false
+    add_column :users, :otp_failed_backup_code_attempts, :integer, default: 0, null: false
   end
 end

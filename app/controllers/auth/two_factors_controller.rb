@@ -23,7 +23,7 @@ class Auth::TwoFactorsController < ApplicationController
   end
 
   def destroy
-    current_user.update!(otp_required_for_login: false, otp_secret: nil, consumed_timestep: nil, otp_updated_at: Time.now.utc)
+    current_user.update!(otp_required_for_login: false, otp_secret: nil, otp_consumed_timestep: nil, otp_updated_at: Time.now.utc)
     redirect_to :edit_user_registration
   end
 

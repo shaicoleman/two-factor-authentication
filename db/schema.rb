@@ -55,14 +55,14 @@ ActiveRecord::Schema.define(version: 2019_12_31_095010) do
     t.string "encrypted_otp_secret_iv"
     t.string "encrypted_otp_backup_codes"
     t.string "encrypted_otp_backup_codes_iv"
-    t.integer "consumed_timestep"
+    t.integer "otp_consumed_timestep"
     t.boolean "otp_required_for_login"
     t.datetime "otp_updated_at"
     t.datetime "password_changed_at"
     t.datetime "otp_backup_codes_updated_at"
     t.datetime "otp_grace_period_started_at"
-    t.integer "failed_otp_attempts", default: 0, null: false
-    t.integer "failed_backup_code_attempts", default: 0, null: false
+    t.integer "otp_failed_attempts", default: 0, null: false
+    t.integer "otp_failed_backup_code_attempts", default: 0, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
