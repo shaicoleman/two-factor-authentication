@@ -32,6 +32,9 @@ en:
       copy: "Copy"
       copied: "Copied!"
     two_factors:
+      must_be_enabled: "Two-Factor Authentication must be enabled"
+      must_be_enabled_before: "Two-Factor Authentication must be enabled before %{date}"
+      continue: "Continue"
       two_factor_authentication: "Two-Factor Authentication"
       confirm_disable: "Turning off two factor authentication will remove the extra security on your account and you’ll only use your password to sign in."
       backup_codes: "Backup codes"
