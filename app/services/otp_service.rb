@@ -30,7 +30,8 @@ class OtpService
     if user.otp_consumed_timestep.to_i >= matching_timestep
       return I18n.t('auth.otp_sessions.otp_code_already_used_error')
     end
-    user.update!(otp_failed_attempts: 0, otp_failed_backup_code_attempts: 0, otp_consumed_timestep: matching_timestep)
+    user.update!(otp_failed_attempts: 0, otp_failed_backup_code_attempts: 0, otp_consumed_timestep: matching_timestep,
+                 otp_grace_period_started_at: nil)
     :success
   end
 
@@ -47,7 +48,8 @@ class OtpService
     end
 
     backup_codes = user.otp_backup_codes.map { |code| (code == backup_code_attempt ? "!#{code}" : code) }
-    user.update!(otp_backup_codes: backup_codes, otp_failed_attempts: 0, otp_failed_backup_code_attempts: 0)
+    user.update!(otp_backup_codes: backup_codes, otp_failed_attempts: 0, otp_failed_backup_code_attempts: 0,
+                 otp_grace_period_started_at: nil)
     :success
   end
 

@@ -1,4 +1,6 @@
 class Auth::TwoFactorsController < ApplicationController
+  skip_before_action :require_2fa
+
   def new
     @otp_secret = OtpService.generate_otp_secret(user: current_user)
     @otp_form = OtpForm.new
