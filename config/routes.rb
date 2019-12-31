@@ -1,5 +1,3 @@
-require 'sidekiq/web'
-
 Rails.application.routes.draw do
   # Devise
   devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks",
@@ -19,10 +17,6 @@ Rails.application.routes.draw do
   end
 
   # Admin
-  authenticate :user, lambda { |u| u.admin? } do
-    mount Sidekiq::Web => '/sidekiq'
-  end
-
   namespace :admin do
     resources :users
     resources :announcements
