@@ -7,7 +7,7 @@ end
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0.2.1'
 # Use pg as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
@@ -45,10 +45,10 @@ end
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.2'
+  gem 'listen'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring-watcher-listen'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
@@ -59,12 +59,11 @@ gem 'devise', '< 5'
 gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
 gem 'devise_masquerade', '~> 0.6.0'
 gem 'font-awesome-sass', '~> 4.7'
-gem 'gravatar_image_tag', github: 'mdeering/gravatar_image_tag'
 gem 'jquery-rails', '~> 4.3.1'
 gem 'bootstrap', '~> 4.0.0.beta'
 gem 'webpacker', '~> 3.0'
 gem 'sidekiq', '~> 5.0'
-gem 'foreman', '~> 0.84.0'
+gem 'foreman'
 gem 'omniauth-facebook', '~> 4.0'
 gem 'omniauth-twitter', '~> 1.4'
 gem 'omniauth-github', '~> 1.3'
