@@ -1,0 +1,31 @@
+# Commonly used screens these days easily fit more than 80 characters.
+AllCops:
+  TargetRubyVersion: 2.6
+  Exclude:
+    - 'vendor/**/*'
+    - 'node_modules/**/*'
+    - 'tmp/**/*'
+    - 'db/schema.rb'
+
+Metrics/LineLength:
+  Max: 120
+  Exclude:
+   - 'spec/**/*.rb'
+   - 'db/seeds.rb'
+  IgnoredPatterns: ['\A\s*#']
+
+Metrics/BlockLength:
+  Exclude:
+   - 'spec/**/*.rb'
+
+Performance/Casecmp:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/MutableConstant:
+  Enabled: false
+
+Style/NumericPredicate:
+  EnforcedStyle: comparison
