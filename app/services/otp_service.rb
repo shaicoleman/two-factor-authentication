@@ -5,8 +5,10 @@ class OtpService
   DRIFT = 30.seconds
   MAX_FAILED_OTP_ATTEMPTS = 12
   MAX_FAILED_BACKUP_CODE_ATTEMPTS = 12
+  BACKUP_CODES_COUNT = 10
+  BACKUP_CODE_LENGTH = 8
   REQUIRE_2FA = true
-  GRACE_PERIOD = 5.minutes
+  GRACE_PERIOD = 1.day
 
   def self.otp_qr_code(issuer: ISSUER, user:)
     otpauth_url = ROTP::TOTP.new(user.otp_secret, issuer: issuer).provisioning_uri(user.email)
@@ -75,7 +77,7 @@ class OtpService
     otp_secret
   end
 
-  def self.generate_backup_codes(user:, count: 10, length: 8)
+  def self.generate_backup_codes(user:, count: BACKUP_CODES_COUNT, length: BACKUP_CODE_LENGTH)
     codes = (count * 2).times.map { format("%0#{length}i", SecureRandom.random_number(10**length)) }.uniq.take(count)
     user.update!(otp_backup_codes: codes, otp_backup_codes_updated_at: Time.now.utc)
     codes
