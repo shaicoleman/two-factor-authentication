@@ -18,9 +18,6 @@ Metrics/BlockLength:
   Exclude:
    - 'spec/**/*.rb'
 
-Performance/Casecmp:
-  Enabled: false
-
 Style/Documentation:
   Enabled: false
 
