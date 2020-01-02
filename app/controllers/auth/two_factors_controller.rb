@@ -30,6 +30,8 @@ class Auth::TwoFactorsController < ApplicationController
 
   def destroy
     current_user.update!(otp_required_for_login: false, otp_secret: nil, otp_consumed_timestep: nil, otp_updated_at: Time.now.utc)
+    enforcement_status, = OtpService.check_enforcement_status(user: current_user)
+    session[:otp_enforcement] = enforcement_status
     redirect_to :edit_user_registration
   end
 
