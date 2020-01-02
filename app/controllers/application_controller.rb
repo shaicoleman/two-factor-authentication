@@ -17,10 +17,12 @@ class ApplicationController < ActionController::Base
   def require_2fa
     return unless user_signed_in?
 
-    enforcement_status, = OtpService.check_enforcement_status(user: current_user)
+    is_first_request = session[:otp_enforcement].blank?
+    enforcement_status = session[:otp_enforcement]&.to_sym
+    enforcement_status, = OtpService.check_enforcement_status(user: current_user) if enforcement_status.blank?
     session[:otp_enforcement] ||= enforcement_status
-    # session[:otp_enforcement] returns a symbol when first set, and a string in subsequent requests
-    # We only match against the :grace_period symbol so it will only redirect on the first request
-    redirect_to(:new_auth_two_factors) if session[:otp_enforcement].in?(['enforced', :enforced, :grace_period])
+    return unless enforcement_status == :enforced || (enforcement_status == :grace_period && is_first_request)
+
+    redirect_to(:new_auth_two_factors)
   end
 end
