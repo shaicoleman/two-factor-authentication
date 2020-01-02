@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::TwoFactorsController < ApplicationController
   skip_before_action :require_2fa
 

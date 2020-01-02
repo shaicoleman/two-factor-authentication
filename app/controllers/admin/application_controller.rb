@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # All Administrate controllers inherit from this `Admin::ApplicationController`,
 # making it the ideal place to put authentication logic or other
 # before_actions.
@@ -14,8 +16,8 @@ module Admin
     end
 
     def default_params
-      params[:order] ||= "created_at"
-      params[:direction] ||= "desc"
+      params[:order] ||= 'created_at'
+      params[:direction] ||= 'desc'
     end
 
     # Override this value to specify the number of elements to display at a time

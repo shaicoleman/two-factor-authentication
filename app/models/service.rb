@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class Service < ApplicationRecord
   belongs_to :user
 
-  %w{ facebook twitter github }.each do |provider|
-    scope provider, ->{ where(provider: provider) }
+  %w[facebook twitter github].each do |provider|
+    scope provider, -> { where(provider: provider) }
   end
 
   def client
@@ -17,7 +19,6 @@ class Service < ApplicationRecord
     send("#{provider}_refresh_token!", super) if expired?
     super
   end
-
 
   def twitter_client
     Twitter::REST::Client.new do |config|

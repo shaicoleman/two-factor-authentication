@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Auth::BackupCodesController < ApplicationController
   def index
     @backup_codes = current_user.otp_backup_codes

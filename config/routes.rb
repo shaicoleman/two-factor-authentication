@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   # Devise
-  devise_for :users, controllers: { sessions: "users/sessions",
-                                    passwords: "users/passwords" }
+  devise_for :users, controllers: { sessions: 'users/sessions',
+                                    passwords: 'users/passwords' }
 
   namespace :auth do
-    resource :two_factors, only: [:new, :create, :edit, :destroy]
-    resources :otp_sessions, only: [:new, :create]
-    resources :backup_code_sessions, only: [:new, :create]
-    resources :backup_codes, only: [:index, :create]
+    resource :two_factors, only: %i[new create edit destroy]
+    resources :otp_sessions, only: %i[new create]
+    resources :backup_code_sessions, only: %i[new create]
+    resources :backup_codes, only: %i[index create]
     get '/backup_codes/print', to: 'backup_codes#print'
     get '/backup_codes/download', to: 'backup_codes#download'
     get '/two_factors', to: redirect('/auth/two_factors/new')
@@ -21,7 +23,7 @@ Rails.application.routes.draw do
     resources :announcements
     resources :notifications
 
-    root to: "users#index"
+    root to: 'users#index'
   end
 
   # Main app routes
