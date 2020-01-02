@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OtpService
   ISSUER = 'OTPExample'
   DRIFT = 30.seconds
@@ -7,7 +9,7 @@ class OtpService
   GRACE_PERIOD = 5.minutes
 
   def self.otp_qr_code(issuer: ISSUER, user:)
-    otpauth_url = ROTP::TOTP.new(user.otp_secret, { issuer: issuer }).provisioning_uri(user.email)
+    otpauth_url = ROTP::TOTP.new(user.otp_secret, issuer: issuer).provisioning_uri(user.email)
     qrcode = nil
     # Find the highest level of error correction that fits a fixed size QR code
     %i[h q m l].each do |level|
@@ -18,9 +20,8 @@ class OtpService
   end
 
   def self.attempt_otp(user:, otp_attempt:, ignore_failed: false)
-    if user.otp_failed_attempts >= MAX_FAILED_OTP_ATTEMPTS
-      return I18n.t('auth.too_many_failed_attempts')
-    end
+    return I18n.t('auth.too_many_failed_attempts') if user.otp_failed_attempts >= MAX_FAILED_OTP_ATTEMPTS
+
     otp = ROTP::TOTP.new(user.otp_secret)
     matching_timestep = otp.verify(otp_attempt, drift_behind: DRIFT)&.div(otp.interval)
     unless matching_timestep
@@ -30,6 +31,7 @@ class OtpService
     if user.otp_consumed_timestep.to_i >= matching_timestep
       return I18n.t('auth.otp_sessions.otp_code_already_used_error')
     end
+
     user.update!(otp_failed_attempts: 0, otp_failed_backup_code_attempts: 0, otp_consumed_timestep: matching_timestep,
                  otp_grace_period_started_at: nil)
     :success
@@ -42,6 +44,7 @@ class OtpService
     if "!#{backup_code_attempt}".in?(user.otp_backup_codes)
       return I18n.t('auth.backup_code_sessions.backup_code_already_used_error')
     end
+
     unless backup_code_attempt.in?(user.otp_backup_codes)
       user.class.increment_counter(:otp_failed_backup_code_attempts, user.id)
       return I18n.t('errors.messages.invalid')
@@ -62,6 +65,7 @@ class OtpService
     deadline = user.otp_grace_period_started_at + OtpService::GRACE_PERIOD
 
     return [:enforced, deadline] if Time.now.utc >= deadline
+
     [:grace_period, deadline]
   end
 
