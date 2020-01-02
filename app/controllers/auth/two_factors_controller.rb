@@ -4,7 +4,8 @@ class Auth::TwoFactorsController < ApplicationController
   skip_before_action :require_2fa
 
   def new
-    @enforcement_status, @deadline = OtpService.check_enforcement_status(user: current_user)
+    @enforcement_status = session[:otp_enforcement].to_sym
+    @deadline = OtpService.enforcement_deadline(user: current_user) if @enforcement_status == :grace_period
     @otp_secret = OtpService.generate_otp_secret(user: current_user)
     @otp_form = OtpForm.new
   end

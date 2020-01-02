@@ -18,8 +18,7 @@ class ApplicationController < ActionController::Base
     return unless user_signed_in?
 
     is_first_request = session[:otp_enforcement].blank?
-    enforcement_status = session[:otp_enforcement]&.to_sym
-    enforcement_status, = OtpService.check_enforcement_status(user: current_user) if enforcement_status.blank?
+    enforcement_status = session[:otp_enforcement]&.to_sym || OtpService.check_enforcement_status(user: current_user)
     session[:otp_enforcement] ||= enforcement_status
     return unless enforcement_status == :enforced || (enforcement_status == :grace_period && is_first_request)
 

@@ -60,15 +60,17 @@ class OtpService
 
   def self.check_enforcement_status(user:)
     return if user.otp_required_for_login?
-    return [:already_enabled, nil] if user.otp_required_for_login?
-    return [:not_enforced, nil] unless OtpService::REQUIRE_2FA
+    return :already_enabled if user.otp_required_for_login?
+    return :not_enforced unless OtpService::REQUIRE_2FA
 
     user.update!(otp_grace_period_started_at: Time.now.utc) if user.otp_grace_period_started_at.blank?
-    deadline = user.otp_grace_period_started_at + OtpService::GRACE_PERIOD
+    return :enforced if Time.now.utc >= enforcement_deadline(user: user)
 
-    return [:enforced, deadline] if Time.now.utc >= deadline
+    :grace_period
+  end
 
-    [:grace_period, deadline]
+  def self.enforcement_deadline(user:, grace_period: OtpService::GRACE_PERIOD)
+    user.otp_grace_period_started_at + grace_period
   end
 
   def self.generate_otp_secret(user:)
