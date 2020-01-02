@@ -2,7 +2,7 @@
   <div class="alert alert-warning"><%= I18n.t('auth.two_factors.must_be_enabled') %></div>
 <% elsif @enforcement_status == :grace_period %>
   <div class="alert alert-info">
-    <p><%= I18n.t('auth.two_factors.must_be_enabled_before', date: @deadline.strftime('%d %b %Y')) %></p>
+    <p><%= I18n.t('auth.two_factors.must_be_enabled_before', date: @deadline.strftime('%d %b %Y %H:%M %Z')) %></p>
     <%= link_to I18n.t('auth.two_factors.ill_do_it_later'), :root, class: "btn btn-primary" %>
   </div>
 <% end %>
