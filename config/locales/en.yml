@@ -32,7 +32,7 @@ en:
       copy: "Copy"
       copied: "Copied!"
     two_factors:
-      must_be_enabled: "Two-Factor Authentication must be enabled"
+      must_be_enabled_now: "Two-Factor Authentication must be enabled now"
       must_be_enabled_before: "Two-Factor Authentication must be enabled before %{date}"
       ill_do_it_later: "I'll do it later"
       two_factor_authentication: "Two-Factor Authentication"
