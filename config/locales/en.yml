@@ -60,3 +60,9 @@ en:
       cant_scan_barcode: "Can't scan the barcode?"
       enter_manually_code: "Enter manually the following time-based key on the Authenticator app"
       step_3: "Step 3: Enter authenticator code"
+    locked_out:
+      link: "Locked out?"
+      title: "Locked out of your account?"
+      info_1: "If you're unable to use the authenticator app, you can use one of your backup codes to log in."
+      info_2: "If you've had too many incorrect attempts, you can use 'Forgot Your Password' to allow more attempts."
+      info_3: "If you don't have access to neither your authenticator nor to the backup codes, you'll have to contact your admin and request them to disable 2FA for your account."

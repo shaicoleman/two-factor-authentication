@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     resources :otp_sessions, only: %i[new create]
     resources :backup_code_sessions, only: %i[new create]
     resources :backup_codes, only: %i[index create]
+    resources :locked_out, only: %i[index]
     get '/backup_codes/print', to: 'backup_codes#print'
     get '/backup_codes/download', to: 'backup_codes#download'
     get '/two_factors', to: redirect('/auth/two_factors/new')
