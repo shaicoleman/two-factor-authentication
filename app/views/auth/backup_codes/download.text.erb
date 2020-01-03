@@ -7,4 +7,6 @@
 <%= OtpService.format_backup_code(backup_code) %>
 <% end %>
 
+<%= I18n.t('auth.backup_codes.info_3') %>
+
 <%= I18n.t('auth.backup_codes.backup_codes_generated_on', date: current_user.otp_backup_codes_updated_at&.strftime('%d %b %Y')) %>
