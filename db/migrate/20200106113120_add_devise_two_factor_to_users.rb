@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AddDeviseTwoFactorToUsers < ActiveRecord::Migration[5.1]
+class AddDeviseTwoFactorToUsers < ActiveRecord::Migration[5.2]
   def change
     add_column :users, :encrypted_otp_secret, :string
     add_column :users, :encrypted_otp_secret_iv, :string
