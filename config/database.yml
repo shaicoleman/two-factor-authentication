@@ -8,3 +8,7 @@ default: &default
 development:
   <<: *default
   database: two_factor_development
+
+test:
+  <<: *default
+  database: two_factor_test

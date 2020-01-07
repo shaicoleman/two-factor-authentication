@@ -12,13 +12,13 @@ class OtpService
 
   def self.otp_qr_code(issuer: ISSUER, user:)
     otpauth_url = ROTP::TOTP.new(user.otp_secret, issuer: issuer).provisioning_uri(user.email)
-    qrcode = nil
     # Find the highest level of error correction that fits a fixed size QR code
     %i[h q m l].each do |level|
-      qrcode ||= suppress(RQRCodeCore::QRCodeRunTimeError) { RQRCode::QRCode.new(otpauth_url, level: level, size: 8) }
+      suppress(RQRCodeCore::QRCodeRunTimeError) do
+        return RQRCode::QRCode.new(otpauth_url, level: level, size: 8)
+      end
     end
-    qrcode ||= RQRCode::QRCode.new(otpauth_url, level: :l)
-    qrcode.as_svg(module_size: 4).html_safe
+    RQRCode::QRCode.new(otpauth_url, level: :l)
   end
 
   def self.attempt_otp(user:, otp_attempt:, ignore_failed: false)
