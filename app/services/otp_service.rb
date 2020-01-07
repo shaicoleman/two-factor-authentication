@@ -21,11 +21,11 @@ class OtpService
     RQRCode::QRCode.new(otpauth_url, level: :l)
   end
 
-  def self.attempt_otp(user:, otp_attempt:, ignore_failed: false)
+  def self.attempt_otp(user:, otp_attempt:, ignore_failed: false, at: Time.now.utc)
     return I18n.t('auth.too_many_failed_attempts') if user.otp_failed_attempts >= MAX_FAILED_OTP_ATTEMPTS
 
     otp = ROTP::TOTP.new(user.otp_secret)
-    matching_timestep = otp.verify(otp_attempt, drift_behind: DRIFT)&.div(otp.interval)
+    matching_timestep = otp.verify(otp_attempt, at: at, drift_behind: DRIFT)&.div(otp.interval)
     unless matching_timestep
       user.class.increment_counter(:otp_failed_attempts, user.id) unless ignore_failed
       return I18n.t('errors.messages.invalid')
