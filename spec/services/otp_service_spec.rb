@@ -110,4 +110,21 @@ RSpec.describe OtpService do
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.last)).to \
       eq(I18n.t('auth.too_many_failed_attempts'))
   end
+
+  it '#generate_otp_secret' do
+    user = User.create!(email: 'test@test.com', password: 'secret')
+    OtpService.generate_otp_secret(user: user)
+
+    # Should change each time
+    expect(user.otp_secret).not_to eq(OtpService.generate_otp_secret(user: user))
+
+    # Should match format
+    expect(user.otp_secret).to match(/^[a-z0-9]{32}$/)
+
+    # Should update otp_updated_at
+    expect(user.otp_updated_at).to be_within(1.second).of(Time.now.utc)
+
+    # Should be stored encrypted
+    expect(user.encrypted_attributes.keys).to include(:otp_secret)
+  end
 end
