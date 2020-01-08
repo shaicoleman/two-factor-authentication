@@ -20,36 +20,34 @@ RSpec.describe OtpService do
   describe '#attempt_otp' do
     it 'Validates OTP attempt' do
       now = Time.now.utc.to_i
-
       otp_secret = 'bseq4wbk7ycoeasjkxj6dd4njqz2zpfx'
+      totp = ROTP::TOTP.new(otp_secret)
       user = User.create!(email: 'test@test.com', password: 'secret', otp_secret: otp_secret)
 
       # Allowed to use codes from the previous timestep
-      otp_attempt = ROTP::TOTP.new(otp_secret).at(now - 30)
-      expect(OtpService.attempt_otp(user: user, otp_attempt: otp_attempt, at: now)).to eq(:success)
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 30), at: now)).to eq(:success)
       expect(user.reload.otp_failed_attempts).to eq(0)
 
       # Allowed to use codes from the current timestep
-      otp_attempt = ROTP::TOTP.new(otp_secret).at(now)
-      expect(OtpService.attempt_otp(user: user, otp_attempt: otp_attempt, at: now)).to eq(:success)
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to eq(:success)
 
       # not allowed to reuse codes
-      expect(OtpService.attempt_otp(user: user, otp_attempt: otp_attempt, at: now)).to eq(I18n.t('auth.otp_sessions.otp_code_already_used_error'))
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to eq(I18n.t('auth.otp_sessions.otp_code_already_used_error'))
       expect(user.reload.otp_failed_attempts).to eq(0)
 
       # not allowed to use codes older than the last successful timestep
-      otp_attempt = ROTP::TOTP.new(otp_secret).at(now - 30)
-      expect(OtpService.attempt_otp(user: user, otp_attempt: otp_attempt, at: now)).to eq(I18n.t('auth.otp_sessions.otp_code_already_used_error'))
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 30), at: now)).to eq(I18n.t('auth.otp_sessions.otp_code_already_used_error'))
 
       # not allowed to use code from 2 timesteps ago
-      otp_attempt = ROTP::TOTP.new(otp_secret).at(now - 60)
-      expect(OtpService.attempt_otp(user: user, otp_attempt: otp_attempt, at: now)).to eq(I18n.t('errors.messages.invalid'))
-      expect(user.reload.otp_failed_attempts).to eq(1)
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 60), at: now)).to eq(I18n.t('errors.messages.invalid'))
 
       # not allowed to use code from the future
-      otp_attempt = ROTP::TOTP.new(otp_secret).at(now + 30)
-      expect(OtpService.attempt_otp(user: user, otp_attempt: otp_attempt, at: now)).to eq(I18n.t('errors.messages.invalid'))
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now)).to eq(I18n.t('errors.messages.invalid'))
       expect(user.reload.otp_failed_attempts).to eq(2)
+
+      # not allowed when number of attempts exceeded, even if correct
+      user.update!(otp_failed_attempts: 999, otp_consumed_timestep: nil)
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to eq(I18n.t('auth.too_many_failed_attempts'))
     end
   end
 end
