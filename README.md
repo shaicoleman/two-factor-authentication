@@ -14,5 +14,6 @@ This is an example of a production ready 2FA example app, inspired by the `devis
 * Allows for delays (drift) when entering the OTP code
 * Stores when 2FA has been enabled, and when the backup codes have been generated
 * Shows how many backup codes remain available
+* Shows how many 2FA attempts remain for OTP/backup codes
 * Generates QR code or allows manually entering the OTP secret
 * I18n ready
