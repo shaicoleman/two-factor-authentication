@@ -74,6 +74,12 @@ RSpec.describe OtpService do
     user.update!(otp_failed_attempts: 999, otp_consumed_timestep: nil)
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to \
       eq(I18n.t('auth.too_many_failed_attempts'))
+
+    # When ignore_failed: true, it should succeed despite exceeding the failed attempts
+    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now, ignore_failed: true)).to eq(:success)
+
+    # When ignore_failed: true, it should still set the failed attempts to 0 on success
+    expect(user.reload.otp_failed_attempts).to eq(0)
   end
 
   it '#attempt_backup_code' do

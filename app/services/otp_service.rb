@@ -24,7 +24,9 @@ class OtpService
   end
 
   def self.attempt_otp(user:, otp_attempt:, ignore_failed: false, at: Time.now.utc)
-    return I18n.t('auth.too_many_failed_attempts') if user.otp_failed_attempts >= MAX_FAILED_OTP_ATTEMPTS
+    if user.otp_failed_attempts >= MAX_FAILED_OTP_ATTEMPTS && !ignore_failed
+      return I18n.t('auth.too_many_failed_attempts')
+    end
 
     otp = ROTP::TOTP.new(user.otp_secret)
     matching_timestep = otp.verify(otp_attempt, at: at, drift_behind: DRIFT)&.div(otp.interval)
@@ -32,6 +34,7 @@ class OtpService
       user.class.increment_counter(:otp_failed_attempts, user.id) unless ignore_failed
       return I18n.t('errors.messages.invalid')
     end
+
     if user.otp_consumed_timestep.to_i >= matching_timestep
       return I18n.t('auth.otp_sessions.otp_code_already_used_error')
     end
@@ -45,6 +48,7 @@ class OtpService
     if user.otp_failed_backup_code_attempts >= MAX_FAILED_BACKUP_CODE_ATTEMPTS
       return I18n.t('auth.too_many_failed_attempts')
     end
+
     if "!#{backup_code_attempt}".in?(user.otp_backup_codes)
       return I18n.t('auth.backup_code_sessions.backup_code_already_used_error')
     end
