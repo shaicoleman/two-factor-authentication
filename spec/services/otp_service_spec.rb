@@ -127,4 +127,24 @@ RSpec.describe OtpService do
     # Should be stored encrypted
     expect(user.encrypted_attributes.keys).to include(:otp_secret)
   end
+
+  it '#generate_backup_codes' do
+    user = User.create!(email: 'test@test.com', password: 'secret')
+    OtpService.generate_backup_codes(user: user)
+
+    # Should change each time
+    expect(user.otp_backup_codes).not_to eq(OtpService.generate_backup_codes(user: user))
+
+    # Should be an 8 digits number
+    expect(user.otp_backup_codes.first).to match(/^\d{8}$/)
+
+    # Should be 10 unique numbers
+    expect(user.otp_backup_codes.uniq.count).to eq(10)
+
+    # Should update otp_backup_codes_updated_at
+    expect(user.otp_backup_codes_updated_at).to be_within(1.second).of(Time.now.utc)
+
+    # Should be stored encrypted
+    expect(user.encrypted_attributes.keys).to include(:otp_backup_codes)
+  end
 end
