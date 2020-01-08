@@ -24,6 +24,11 @@ class OtpService
   end
 
   def self.attempt_otp(user:, otp_attempt:, ignore_failed: false, at: Time.now.utc)
+    otp_attempt = otp_attempt.remove(/\s+/)
+    unless otp_attempt.match?(/\A\d{6}\z/)
+      return I18n.t('errors.messages.invalid')
+    end
+
     if user.otp_failed_attempts >= MAX_FAILED_OTP_ATTEMPTS && !ignore_failed
       return I18n.t('auth.too_many_failed_attempts')
     end
@@ -45,6 +50,11 @@ class OtpService
   end
 
   def self.attempt_backup_code(user:, backup_code_attempt:)
+    backup_code_attempt = backup_code_attempt.remove(/\s+/)
+    unless backup_code_attempt.match?(/\A\d{8}\z/)
+      return I18n.t('errors.messages.invalid')
+    end
+
     if user.otp_failed_backup_code_attempts >= MAX_FAILED_BACKUP_CODE_ATTEMPTS
       return I18n.t('auth.too_many_failed_attempts')
     end

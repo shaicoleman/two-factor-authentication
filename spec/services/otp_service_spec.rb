@@ -70,6 +70,13 @@ RSpec.describe OtpService do
     # When ignore_failed: true, it shouldn't increment the failed attempts counter
     expect(user.reload.otp_failed_attempts).to eq(2)
 
+    # Do not allow codes that aren't 6 digits
+    expect(OtpService.attempt_otp(user: user, otp_attempt: '!123456', at: now)).to \
+      eq(I18n.t('errors.messages.invalid'))
+
+    # Do not increment the failed attempt counter for codes that aren't 6 digits
+    expect(user.reload.otp_failed_attempts).to eq(2)
+
     # Not allowed when number of attempts exceeded, even if correct
     user.update!(otp_failed_attempts: 999, otp_consumed_timestep: nil)
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to \
@@ -104,11 +111,19 @@ RSpec.describe OtpService do
     # Do not increment failed attempts counter when attempting to reuse code
     expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
 
-    # Not allowed to use invalid codes
-    expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: 'invalid')).to \
+    # Not allowed to use invalid code
+    invalid_code = %w[00000000 11111111 22222222 33333333].find { |code| !code.in?(codes) }
+    expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: invalid_code)).to \
       eq(I18n.t('errors.messages.invalid'))
 
     # Increment the failed attempt counter on failure
+    expect(user.reload.otp_failed_backup_code_attempts).to eq(1)
+
+    # Do not allow codes that aren't 8 digits
+    expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: "!#{codes.first}")).to \
+      eq(I18n.t('errors.messages.invalid'))
+
+    # Do not increment the failed attempt counter for codes that aren't 8 digits
     expect(user.reload.otp_failed_backup_code_attempts).to eq(1)
 
     # Not allowed when number of attempts exceeded, even if correct
