@@ -45,6 +45,10 @@ RSpec.describe OtpService do
       expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now)).to eq(I18n.t('errors.messages.invalid'))
       expect(user.reload.otp_failed_attempts).to eq(2)
 
+      # when ignore_failed: true, do not increment otp_failed_attempts
+      expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now, ignore_failed: true)).to eq(I18n.t('errors.messages.invalid'))
+      expect(user.reload.otp_failed_attempts).to eq(2)
+
       # not allowed when number of attempts exceeded, even if correct
       user.update!(otp_failed_attempts: 999, otp_consumed_timestep: nil)
       expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to eq(I18n.t('auth.too_many_failed_attempts'))
