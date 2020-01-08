@@ -5,6 +5,8 @@ class OtpService
   DRIFT = 30.seconds
   MAX_FAILED_OTP_ATTEMPTS = 12
   MAX_FAILED_BACKUP_CODE_ATTEMPTS = 12
+  WARN_OTP_ATTEMPTS_LEFT = 9
+  WARN_BACKUP_CODE_ATTEMPTS_LEFT = 9
   BACKUP_CODES_COUNT = 10
   BACKUP_CODE_LENGTH = 8
   REQUIRE_2FA = true
@@ -83,6 +85,16 @@ class OtpService
     codes = (count * 2).times.map { format("%0#{length}i", SecureRandom.random_number(10**length)) }.uniq.take(count)
     user.update!(otp_backup_codes: codes, otp_backup_codes_updated_at: Time.now.utc)
     codes
+  end
+
+  def self.otp_attempts_remaining(user:)
+    attempts_remaining = MAX_FAILED_OTP_ATTEMPTS - user.reload.otp_failed_attempts
+    I18n.t('auth.attempts_remaining', count: attempts_remaining) if attempts_remaining <= WARN_OTP_ATTEMPTS_LEFT
+  end
+
+  def self.backup_codes_attempts_remaining(user:)
+    attempts_remaining = MAX_FAILED_BACKUP_CODE_ATTEMPTS - user.reload.otp_failed_backup_code_attempts
+    I18n.t('auth.attempts_remaining', count: attempts_remaining) if attempts_remaining <= WARN_BACKUP_CODE_ATTEMPTS_LEFT
   end
 
   def self.backup_codes_available(user:)

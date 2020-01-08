@@ -3,6 +3,9 @@ en:
     remember_me: "Remember me"
     log_in: "Log in"
     too_many_failed_attempts: "Too many failed attempts"
+    attempts_remaining:
+      one: "%{count} attempt remaining"
+      other: "%{count} attempts remaining"
     otp_sessions:
       authenticator_code: "Authenticator Code"
       enter_authenticator_code: "Enter Authenticator Code"

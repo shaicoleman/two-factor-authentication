@@ -2,6 +2,9 @@
   <div class="col-lg-4 col-md-6 ml-auto mr-auto">
     <h1 class="text-center"><%= I18n.t('auth.backup_code_sessions.enter_backup_code') %></h1>
     <p><%= I18n.t('auth.backup_code_sessions.enter_backup_code_detail') %></p>
+    <% if @attempts_remaining.present? %>
+      <div class="alert alert-warning"><%= @attempts_remaining %></div>
+    <% end %>
 
     <%= simple_form_for(@backup_code_form, url: auth_backup_code_sessions_path, html: { id: "step-2" } ) do |f| %>
     <%= f.error_notification %>

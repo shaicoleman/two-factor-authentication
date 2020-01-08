@@ -7,7 +7,9 @@ class Auth::BackupCodeSessionsController < ApplicationController
     return redirect_to(after_sign_in_path_for(resource)) if user_signed_in?
     return redirect_to(:new_user_session) unless session[:otp_user_id]
 
+    user = User.find_by(id: session[:otp_user_id])
     @backup_code_form = BackupCodeForm.new
+    @attempts_remaining = OtpService.backup_codes_attempts_remaining(user: user)
   end
 
   def create
@@ -15,11 +17,15 @@ class Auth::BackupCodeSessionsController < ApplicationController
 
     user = User.find_by(id: session[:otp_user_id])
     return redirect_to(:new_user_session) unless user.present?
-    return render :new unless @backup_code_form.valid?
+    unless @backup_code_form.valid?
+      @attempts_remaining = OtpService.backup_codes_attempts_remaining(user: user)
+      return render :new
+    end
 
     response = OtpService.attempt_backup_code(user: user, backup_code_attempt: @backup_code_form.backup_code_attempt)
     unless response == :success
       @backup_code_form.errors.add(:backup_code_attempt, response)
+      @attempts_remaining = OtpService.backup_codes_attempts_remaining(user: user)
       return render :new
     end
 
