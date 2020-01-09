@@ -9,6 +9,7 @@ class OtpService
   WARN_BACKUP_CODE_ATTEMPTS_LEFT = 9
   BACKUP_CODES_COUNT = 10
   BACKUP_CODE_LENGTH = 8
+  MIN_QR_CODE_SIZE = 8
   REQUIRE_2FA = true
   GRACE_PERIOD = 1.day
 
@@ -17,7 +18,7 @@ class OtpService
     # Find the highest level of error correction that fits a fixed size QR code
     %i[h q m l].each do |level|
       suppress(RQRCodeCore::QRCodeRunTimeError) do
-        return RQRCode::QRCode.new(otpauth_url, level: level, size: 8)
+        return RQRCode::QRCode.new(otpauth_url, level: level, size: MIN_QR_CODE_SIZE)
       end
     end
     RQRCode::QRCode.new(otpauth_url, level: :l)
