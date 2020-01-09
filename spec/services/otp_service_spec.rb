@@ -161,8 +161,9 @@ RSpec.describe OtpService do
     # Generates 8 digits codes
     expect(user.otp_backup_codes.first).to match(/^\d{8}$/)
 
-    # Generates 10 unique codes
-    expect(user.otp_backup_codes.uniq.count).to eq(10)
+    # Ensures codes are unique
+    OtpService.generate_backup_codes(user: user, length: 2, count: 12)
+    expect(user.otp_backup_codes.uniq.count).to eq(12)
 
     # Updates otp_backup_codes_updated_at
     expect(user.otp_backup_codes_updated_at).to be_within(1.second).of(Time.now.utc)
