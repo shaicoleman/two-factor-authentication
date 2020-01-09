@@ -13,12 +13,13 @@ class OtpService
   REQUIRE_2FA = true
   GRACE_PERIOD = 1.day
 
-  def self.otp_qr_code(issuer: ISSUER, user:)
+  # Generate a QR code with the maximum error correction that fits a fixed size
+  # Size 8 should be enough to accomodate a 32 character issuer and a 64 character email
+  def self.otp_qr_code(issuer: ISSUER, user:, min_qr_code_size: MIN_QR_CODE_SIZE)
     otpauth_url = ROTP::TOTP.new(user.otp_secret, issuer: issuer).provisioning_uri(user.email)
-    # Find the highest level of error correction that fits a fixed size QR code
     %i[h q m l].each do |level|
       suppress(RQRCodeCore::QRCodeRunTimeError) do
-        return RQRCode::QRCode.new(otpauth_url, level: level, size: MIN_QR_CODE_SIZE)
+        return RQRCode::QRCode.new(otpauth_url, level: level, size: min_qr_code_size)
       end
     end
     RQRCode::QRCode.new(otpauth_url, level: :l)
