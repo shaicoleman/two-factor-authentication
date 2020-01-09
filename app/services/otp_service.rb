@@ -52,6 +52,7 @@ class OtpService
   def self.attempt_backup_code(user:, backup_code_attempt:)
     backup_code_attempt = backup_code_attempt.remove(/\s+/)
     return I18n.t('errors.messages.invalid') unless backup_code_attempt.match?(/\A\d{#{BACKUP_CODE_LENGTH}}\z/)
+    return I18n.t('errors.messages.invalid') unless user.otp_backup_codes.is_a?(Array)
 
     if user.otp_failed_backup_code_attempts >= MAX_FAILED_BACKUP_CODE_ATTEMPTS
       return I18n.t('auth.too_many_failed_attempts')

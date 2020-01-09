@@ -136,6 +136,10 @@ RSpec.describe OtpService do
     user.update!(otp_failed_backup_code_attempts: 999)
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.last)).to \
       eq(I18n.t('auth.too_many_failed_attempts'))
+
+    # Reject when otp_backup_codes is nil
+    user.update!(otp_backup_codes: nil)
+    expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: '')).to eq(I18n.t('errors.messages.invalid'))
   end
 
   it '#generate_otp_secret' do
