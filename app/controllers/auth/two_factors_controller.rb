@@ -10,12 +10,13 @@ class Auth::TwoFactorsController < ApplicationController
     @deadline = OtpService.enforcement_deadline(user: current_user) if @enforcement_status == :grace_period
     OtpService.generate_otp_secret(user: current_user)
     @otp_secret = OtpService.format_otp_secret(current_user.otp_secret)
-    @qr_code = OtpService.otp_qr_code(issuer: 'OTPExample', user: current_user)
     @otp_form = OtpForm.new
+    @qr_code = OtpService.otp_qr_code(issuer: 'OTPExample', user: current_user)
   end
 
   def create
     @otp_form = OtpForm.new(otp_form_params)
+    @qr_code = OtpService.otp_qr_code(issuer: 'OTPExample', user: current_user)
     return render :new unless @otp_form.valid?
 
     response = OtpService.attempt_otp(user: current_user, otp_attempt: @otp_form.otp_attempt, ignore_failed: true)
