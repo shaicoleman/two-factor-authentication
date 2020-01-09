@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe OtpService do
   it '#otp_qr_code' do
-    otp_secret = 'bseq4wbk7ycoeasjkxj6dd4njqz2zpfx'
+    otp_secret = ROTP::Base32.random.downcase
     issuer = 'ISSUER'
     email = "#{Random.alphanumeric(rand(8..64))}@test.com"
     user = User.create!(email: email, password: 'secret', otp_secret: otp_secret)
@@ -24,7 +24,7 @@ RSpec.describe OtpService do
 
   it '#attempt_otp' do
     now = Time.now.utc.to_i
-    otp_secret = 'bseq4wbk7ycoeasjkxj6dd4njqz2zpfx'
+    otp_secret = ROTP::Base32.random.downcase
     totp = ROTP::TOTP.new(otp_secret)
     user = User.create!(email: 'test@test.com', password: 'secret', otp_secret: otp_secret,
                         otp_failed_attempts: 3, otp_grace_period_started_at: 1.day.ago)
@@ -32,8 +32,8 @@ RSpec.describe OtpService do
     # Allowed to use codes from the previous timestep
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 30), at: now)).to eq(:success)
 
-    # Allowed to use codes from the current timestep
-    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to eq(:success)
+    # Allowed to use codes from the current timestep, ignoring whitespace
+    expect(OtpService.attempt_otp(user: user, otp_attempt: "#{totp.at(now)} ", at: now)).to eq(:success)
 
     # Reset failed attempts counter on successful login
     expect(user.reload.otp_failed_attempts).to eq(0)
@@ -94,8 +94,8 @@ RSpec.describe OtpService do
                         otp_grace_period_started_at: 1.day.ago)
     codes = OtpService.generate_backup_codes(user: user)
 
-    # Should succeed with an unused valid code
-    expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.first)).to \
+    # Should succeed with an unused valid code, ignoring whitespace
+    expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: "#{codes.first} ")).to \
       eq(:success)
 
     # Reset failed attempts counter on successful login
