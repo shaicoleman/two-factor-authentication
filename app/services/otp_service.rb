@@ -100,7 +100,7 @@ class OtpService
   end
 
   def self.backup_codes_available(user:)
-    user.otp_backup_codes&.count { |code| !code.starts_with?('!') } || 0
+    user.otp_backup_codes&.count { |code| !code&.starts_with?('!') } || 0
   end
 
   def self.format_otp_secret(code)
@@ -108,7 +108,7 @@ class OtpService
   end
 
   def self.format_backup_code(code)
-    return I18n.t('auth.backup_codes.already_used') if code.starts_with?('!')
+    return I18n.t('auth.backup_codes.already_used') if code&.starts_with?('!')
 
     code&.gsub(/(.{4})(?=.)/, '\1 \2') || I18n.t('errors.messages.invalid')
   end

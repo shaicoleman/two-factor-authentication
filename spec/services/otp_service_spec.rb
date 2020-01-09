@@ -179,8 +179,27 @@ RSpec.describe OtpService do
     expect(OtpService.backup_codes_available(user: user)).to eq(10)
 
     # Should return 9 codes after a code has been used
-    codes = OtpService.generate_backup_codes(user: user)
     OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.first)
     expect(OtpService.backup_codes_available(user: user)).to eq(9)
+  end
+
+  it '#format_otp_secret' do
+    # Formats number in groups of 4 characters
+    expect(OtpService.format_otp_secret('lgdod5kkcwdjwhjcx5u6ecv2vwtfpx54')).to \
+      eq('lgdo d5kk cwdj whjc x5u6 ecv2 vwtf px54')
+
+    # Handles nil
+    expect(OtpService.format_backup_code(nil)).to eq(I18n.t('errors.messages.invalid'))
+  end
+
+  it '#format_backup_code' do
+    # Formats number in groups of 4 digits
+    expect(OtpService.format_backup_code('12345678')).to eq('1234 5678')
+
+    # Returns "already used" message for used codes
+    expect(OtpService.format_backup_code('!12345678')).to eq(I18n.t('auth.backup_codes.already_used'))
+
+    # Handles nil
+    expect(OtpService.format_backup_code(nil)).to eq(I18n.t('errors.messages.invalid'))
   end
 end
