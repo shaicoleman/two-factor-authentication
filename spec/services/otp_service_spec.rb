@@ -26,8 +26,8 @@ RSpec.describe OtpService do
     now = Time.now.utc.to_i
     otp_secret = ROTP::Base32.random.downcase
     totp = ROTP::TOTP.new(otp_secret)
-    user = User.create!(email: 'test@test.com', password: 'secret', otp_secret: otp_secret,
-                        otp_failed_attempts: 3, otp_grace_period_started_at: 1.day.ago)
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_secret: otp_secret, otp_failed_attempts: 3,
+                        otp_failed_backup_code_attempts: 3, otp_grace_period_started_at: 1.day.ago)
 
     # Allowed to use codes from the previous timestep
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 30), at: now)).to eq(:success)
@@ -35,8 +35,9 @@ RSpec.describe OtpService do
     # Allowed to use codes from the current timestep, ignoring whitespace
     expect(OtpService.attempt_otp(user: user, otp_attempt: "#{totp.at(now)} ", at: now)).to eq(:success)
 
-    # Reset failed attempts counter on successful login
+    # Reset failed attempts counters on successful login
     expect(user.reload.otp_failed_attempts).to eq(0)
+    expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
 
     # Reset grace period on successful login
     expect(user.otp_grace_period_started_at).to eq(nil)
@@ -90,15 +91,16 @@ RSpec.describe OtpService do
   end
 
   it '#attempt_backup_code' do
-    user = User.create!(email: 'test@test.com', password: 'secret', otp_failed_backup_code_attempts: 3,
-                        otp_grace_period_started_at: 1.day.ago)
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_failed_attempts: 3,
+                        otp_failed_backup_code_attempts: 3, otp_grace_period_started_at: 1.day.ago)
     codes = OtpService.generate_backup_codes(user: user)
 
     # Should succeed with an unused valid code, ignoring whitespace
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: "#{codes.first} ")).to \
       eq(:success)
 
-    # Reset failed attempts counter on successful login
+    # Reset failed attempts counters on successful login
+    expect(user.reload.otp_failed_attempts).to eq(0)
     expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
 
     # Reset grace period on successful login
