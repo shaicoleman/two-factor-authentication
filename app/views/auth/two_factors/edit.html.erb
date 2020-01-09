@@ -13,7 +13,7 @@
   <div class="card w-100">
     <div class="card-body">
       <h5 class="card-title"><%= I18n.t('auth.two_factors.backup_codes') %></h5>
-      <p class="card-text"><%= I18n.t('auth.two_factors.backup_codes_available', count: OtpService.backup_codes_available(user: current_user)) %></p>
+      <p class="card-text"><%= I18n.t('auth.two_factors.backup_codes_available', count: @backup_codes_available) %></p>
       <%= link_to I18n.t('auth.two_factors.view_backup_codes'), :auth_backup_codes, class: 'btn btn-primary' %>
     </div>
   </div>

@@ -30,6 +30,8 @@ class Auth::TwoFactorsController < ApplicationController
 
   def edit
     return redirect_to :new_auth_two_factors unless current_user.otp_required_for_login
+
+    @backup_codes_available = OtpService.backup_codes_available(user: current_user)
   end
 
   def destroy
