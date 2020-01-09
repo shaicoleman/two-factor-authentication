@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class OtpService
-  ISSUER = 'OTPExample'
   DRIFT_BEHIND = 30.seconds
   DRIFT_AHEAD = 0.seconds
   MAX_FAILED_OTP_ATTEMPTS = 12
@@ -16,7 +15,7 @@ class OtpService
 
   # Generate a QR code with the maximum error correction that fits a fixed size
   # Size 8 should be enough to accomodate a 32 character issuer and a 64 character email
-  def self.otp_qr_code(issuer: ISSUER, user:, min_qr_code_size: MIN_QR_CODE_SIZE)
+  def self.otp_qr_code(issuer:, user:, min_qr_code_size: MIN_QR_CODE_SIZE)
     otpauth_url = ROTP::TOTP.new(user.otp_secret, issuer: issuer).provisioning_uri(user.email)
     %i[h q m l].each do |level|
       suppress(RQRCodeCore::QRCodeRunTimeError) do

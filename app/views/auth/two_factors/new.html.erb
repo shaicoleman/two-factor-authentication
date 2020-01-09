@@ -27,7 +27,7 @@
         <li><%= I18n.t('auth.two_factors.scan_barcode') %></li>
       </ul>
 
-      <%= OtpService.otp_qr_code(user: current_user).as_svg(module_size: 4).html_safe %>
+      <%= OtpService.otp_qr_code(issuer: 'OTPExample', user: current_user).as_svg(module_size: 4).html_safe %>
       <br><br>
       <h5 class="card-title"><%= I18n.t('auth.two_factors.cant_scan_barcode') %></h5>
       <p class="card-text"><%= I18n.t('auth.two_factors.enter_manually_code') %></p>
