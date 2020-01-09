@@ -6,7 +6,7 @@
       <div class="alert alert-warning"><%= @attempts_remaining %></div>
     <% end %>
 
-    <%= simple_form_for(@otp_form, url: auth_otp_sessions_path, html: { id: "step-2" } ) do |f| %>
+    <%= simple_form_for(@otp_form, url: auth_otp_sessions_path) do |f| %>
     <%= f.error_notification %>
 
       <div class="form-group">

@@ -27,11 +27,11 @@
         <li><%= I18n.t('auth.two_factors.scan_barcode') %></li>
       </ul>
 
-      <%= OtpService.otp_qr_code(issuer: 'OTPExample', user: current_user).as_svg(module_size: 4).html_safe %>
+      <%= @qr_code.as_svg(module_size: 4).html_safe %>
       <br><br>
       <h5 class="card-title"><%= I18n.t('auth.two_factors.cant_scan_barcode') %></h5>
       <p class="card-text"><%= I18n.t('auth.two_factors.enter_manually_code') %></p>
-      <code><%= OtpService.format_otp_secret(current_user.otp_secret) %></code>
+      <code><%= @otp_secret %></code>
       </dl>
     </div>
   </div>
@@ -42,7 +42,7 @@
       <h5 class="card-title"><%= I18n.t('auth.two_factors.step_3') %></h5>
       <p class="card-text"><%= I18n.t('auth.otp_sessions.enter_authenticator_code_detail') %></p>
 
-      <%= simple_form_for(@otp_form, url: auth_two_factors_path, html: { id: "step-2" } ) do |f| %>
+      <%= simple_form_for(@otp_form, url: auth_two_factors_path) do |f| %>
       <%= f.error_notification %>
         <div class="form-group">
           <%= f.input :otp_attempt, placeholder: I18n.t('auth.otp_sessions.authenticator_code'), input_html: { autocomplete: 'off', autofocus: true }, class: 'form-control' %>
