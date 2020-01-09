@@ -9,7 +9,7 @@
         <% @backup_codes.each do |backup_code| %>
           <div>
             <%= check_box_tag nil, nil, false, disabled: !print_version, id: nil %>
-            <code><%= OtpService.format_backup_code(backup_code) %></code>
+            <code><%= backup_code %></code>
           </div>
         <% end %>
       </form>

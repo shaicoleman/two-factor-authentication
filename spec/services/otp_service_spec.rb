@@ -190,17 +190,17 @@ RSpec.describe OtpService do
       eq('lgdo d5kk cwdj whjc x5u6 ecv2 vwtf px54')
 
     # Returns invalid message when nil
-    expect(OtpService.format_backup_code(nil)).to eq(I18n.t('errors.messages.invalid'))
+    expect(OtpService.format_otp_secret(nil)).to eq(I18n.t('errors.messages.invalid'))
   end
 
-  it '#format_backup_code' do
+  it '#format_backup_codes' do
     # Formats number in groups of 4 digits
-    expect(OtpService.format_backup_code('12345678')).to eq('1234 5678')
+    expect(OtpService.format_backup_codes(['12345678', '23456789'])).to eq(['1234 5678', '2345 6789'])
 
     # Returns "already used" message for used codes
-    expect(OtpService.format_backup_code('!12345678')).to eq(I18n.t('auth.backup_codes.already_used'))
+    expect(OtpService.format_backup_codes(['!12345678'])).to eq([I18n.t('auth.backup_codes.already_used')])
 
     # Returns invalid message when nil
-    expect(OtpService.format_backup_code(nil)).to eq(I18n.t('errors.messages.invalid'))
+    expect(OtpService.format_backup_codes(nil)).to eq([I18n.t('errors.messages.invalid')])
   end
 end

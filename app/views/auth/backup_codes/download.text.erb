@@ -4,7 +4,7 @@
 <%= I18n.t('auth.backup_codes.info_2') %>
 
 <% @backup_codes.each do |backup_code| %>
-<%= OtpService.format_backup_code(backup_code) %>
+<%= backup_code %>
 <% end %>
 
 <%= I18n.t('auth.backup_codes.info_3') %>

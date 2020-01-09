@@ -107,10 +107,12 @@ class OtpService
     code&.gsub(/(.{4})(?=.)/, '\1 \2') || I18n.t('errors.messages.invalid')
   end
 
-  def self.format_backup_code(code)
-    return I18n.t('auth.backup_codes.already_used') if code&.starts_with?('!')
+  def self.format_backup_codes(codes)
+    codes&.map do |code|
+      next I18n.t('auth.backup_codes.already_used') if code&.starts_with?('!')
 
-    code&.gsub(/(.{4})(?=.)/, '\1 \2') || I18n.t('errors.messages.invalid')
+      code&.gsub(/(.{4})(?=.)/, '\1 \2')
+    end || [I18n.t('errors.messages.invalid')]
   end
 
   def self.check_enforcement_status(user:)
