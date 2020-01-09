@@ -8,8 +8,8 @@ class Auth::TwoFactorsController < ApplicationController
 
     @enforcement_status = session[:otp_enforcement]&.to_sym
     @deadline = OtpService.enforcement_deadline(user: current_user) if @enforcement_status == :grace_period
-    @otp_secret = OtpService.generate_otp_secret(user: current_user)
-    @otp_secret = OtpService.format_otp_secret(@otp_secret)
+    OtpService.generate_otp_secret(user: current_user)
+    @otp_secret = OtpService.format_otp_secret(current_user.otp_secret)
     @qr_code = OtpService.otp_qr_code(issuer: 'OTPExample', user: current_user)
     @otp_form = OtpForm.new
   end

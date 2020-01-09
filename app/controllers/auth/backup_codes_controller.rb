@@ -4,9 +4,8 @@ class Auth::BackupCodesController < ApplicationController
   FILENAME = 'two-factors-backup-codes.txt'
 
   def index
-    @backup_codes = current_user.otp_backup_codes
-    @backup_codes = OtpService.generate_backup_codes(user: current_user) if @backup_codes.blank?
-    @backup_codes = OtpService.format_backup_codes(@backup_codes)
+    OtpService.generate_backup_codes(user: current_user) if @current_user.otp_backup_codes.blank?
+    @backup_codes = OtpService.format_backup_codes(current_user.otp_backup_codes)
   end
 
   def create
