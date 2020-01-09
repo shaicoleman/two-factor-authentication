@@ -96,7 +96,11 @@ class OtpService
   end
 
   def self.generate_backup_codes(user:, count: BACKUP_CODES_COUNT, length: BACKUP_CODE_LENGTH)
-    codes = (count * 2).times.map { format("%0#{length}i", SecureRandom.random_number(10**length)) }.uniq.take(count)
+    codes = []
+    while codes.length < count
+      code = format("%0#{length}i", SecureRandom.random_number(10**length))
+      codes << code unless code.in?(codes)
+    end
     user.update!(otp_backup_codes: codes, otp_backup_codes_updated_at: Time.now.utc)
     codes
   end
