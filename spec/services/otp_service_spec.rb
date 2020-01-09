@@ -203,4 +203,11 @@ RSpec.describe OtpService do
     # Returns invalid message when nil
     expect(OtpService.format_backup_codes(nil)).to eq([I18n.t('errors.messages.invalid')])
   end
+
+  it '#check_enforcement_status' do
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_required_for_login: true)
+
+    # Returns :already_enabled when 2FA is already enabled
+    expect(OtpService.check_enforcement_status(user: user)).to eq(:already_enabled)
+  end
 end

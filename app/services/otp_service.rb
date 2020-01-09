@@ -116,7 +116,6 @@ class OtpService
   end
 
   def self.check_enforcement_status(user:)
-    return if user.otp_required_for_login?
     return :already_enabled if user.otp_required_for_login?
     return :not_enforced unless OtpService::REQUIRE_2FA
 
