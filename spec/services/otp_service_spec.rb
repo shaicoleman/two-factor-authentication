@@ -88,6 +88,10 @@ RSpec.describe OtpService do
 
     # When ignore_failed: true, resets failed attempts to 0 on success
     expect(user.reload.otp_failed_attempts).to eq(0)
+
+    # Reject when otp_secret is nil
+    user.update!(otp_secret: nil)
+    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now))).to eq(I18n.t('errors.messages.invalid'))
   end
 
   it '#attempt_backup_code' do
