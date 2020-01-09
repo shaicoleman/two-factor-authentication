@@ -73,21 +73,6 @@ class OtpService
     :success
   end
 
-  def self.check_enforcement_status(user:)
-    return if user.otp_required_for_login?
-    return :already_enabled if user.otp_required_for_login?
-    return :not_enforced unless OtpService::REQUIRE_2FA
-
-    user.update!(otp_grace_period_started_at: Time.now.utc) if user.otp_grace_period_started_at.blank?
-    return :enforced if Time.now.utc >= enforcement_deadline(user: user)
-
-    :grace_period
-  end
-
-  def self.enforcement_deadline(user:, grace_period: OtpService::GRACE_PERIOD)
-    user.otp_grace_period_started_at + grace_period
-  end
-
   def self.generate_otp_secret(user:)
     otp_secret = ROTP::Base32.random.downcase
     user.update!(otp_secret: otp_secret, otp_updated_at: Time.now.utc)
@@ -126,5 +111,20 @@ class OtpService
     return I18n.t('auth.backup_codes.already_used') if code.starts_with?('!')
 
     code&.gsub(/(.{4})(?=.)/, '\1 \2') || I18n.t('errors.messages.invalid')
+  end
+
+  def self.check_enforcement_status(user:)
+    return if user.otp_required_for_login?
+    return :already_enabled if user.otp_required_for_login?
+    return :not_enforced unless OtpService::REQUIRE_2FA
+
+    user.update!(otp_grace_period_started_at: Time.now.utc) if user.otp_grace_period_started_at.blank?
+    return :enforced if Time.now.utc >= enforcement_deadline(user: user)
+
+    :grace_period
+  end
+
+  def self.enforcement_deadline(user:, grace_period: OtpService::GRACE_PERIOD)
+    user.otp_grace_period_started_at + grace_period
   end
 end

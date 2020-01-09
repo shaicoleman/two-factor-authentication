@@ -170,4 +170,17 @@ RSpec.describe OtpService do
     # Should be stored encrypted
     expect(user.encrypted_attributes.keys).to include(:otp_backup_codes)
   end
+
+  it '#backup_codes_available' do
+    user = User.create!(email: 'test@test.com', password: 'secret')
+    codes = OtpService.generate_backup_codes(user: user)
+
+    # Should return 10 codes for newly generated backup codes
+    expect(OtpService.backup_codes_available(user: user)).to eq(10)
+
+    # Should return 9 codes after a code has been used
+    codes = OtpService.generate_backup_codes(user: user)
+    OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.first)
+    expect(OtpService.backup_codes_available(user: user)).to eq(9)
+  end
 end
