@@ -18,7 +18,7 @@ RSpec.describe OtpService do
     svg = result.as_svg(module_size: 4)
     expect(svg).to include('<svg')
 
-    # QR code should have a fixed size, regardless of the length of the email
+    # QR code should have a fixed size, regardless of the random length of the email
     expect(svg).to include('width="196" height="196"')
   end
 
@@ -119,7 +119,7 @@ RSpec.describe OtpService do
     # Increment the failed attempt counter on failure
     expect(user.reload.otp_failed_backup_code_attempts).to eq(1)
 
-    # Do not allow codes that aren't 8 digits
+    # Do not match used codes as stored in DB, nor codes that aren't 8 digits
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: "!#{codes.first}")).to \
       eq(I18n.t('errors.messages.invalid'))
 
