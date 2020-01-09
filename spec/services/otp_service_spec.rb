@@ -10,15 +10,15 @@ RSpec.describe OtpService do
     user = User.create!(email: email, password: 'secret', otp_secret: otp_secret)
     result = OtpService.otp_qr_code(user: user, issuer: issuer)
 
-    # QR should have the correct TOTP URL
+    # Generates QR code with correct TOTP URL
     expect(result.qrcode.instance_variable_get(:@data)).to \
       eq("otpauth://totp/#{issuer}:#{email.downcase}?secret=#{otp_secret}&issuer=#{issuer}")
 
-    # Should generate SVG output successfully
+    # Generates QR code as SVG
     svg = result.as_svg(module_size: 4)
     expect(svg).to include('<svg')
 
-    # QR code should have a fixed size, regardless of the random length of the email
+    # Generates a fixed size QR code, regardless of the email length
     expect(svg).to include('width="196" height="196"')
   end
 
@@ -29,64 +29,64 @@ RSpec.describe OtpService do
     user = User.create!(email: 'test@test.com', password: 'secret', otp_secret: otp_secret, otp_failed_attempts: 3,
                         otp_failed_backup_code_attempts: 3, otp_grace_period_started_at: 1.day.ago)
 
-    # Allowed to use codes from the previous timestep
+    # Accepts a code from the previous timestep
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 30), at: now)).to eq(:success)
 
-    # Allowed to use codes from the current timestep, ignoring whitespace
+    # Accepts a code from the current timestep, ignoring whitespace
     expect(OtpService.attempt_otp(user: user, otp_attempt: "#{totp.at(now)} ", at: now)).to eq(:success)
 
-    # Reset failed attempts counters on successful login
+    # Resets failed attempts counters on successful login
     expect(user.reload.otp_failed_attempts).to eq(0)
     expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
 
-    # Reset grace period on successful login
+    # Resets grace period on successful login
     expect(user.otp_grace_period_started_at).to eq(nil)
 
-    # Not allowed to reuse codes
+    # Rejects reused codes
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to \
       eq(I18n.t('auth.otp_sessions.otp_code_already_used_error'))
 
-    # Not allowed to use codes older than the last successful timestep
+    # Rejects codes older than the last successful timestep
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 30), at: now)).to \
       eq(I18n.t('auth.otp_sessions.otp_code_already_used_error'))
 
-    # Do not increment failed attempts counter when attempting to reuse code
+    # Keeps unchanged failed attempts counter when attempting to reuse code
     expect(user.reload.otp_failed_attempts).to eq(0)
 
-    # Not allowed to use code from 2 timesteps ago
+    # Rejects codes from 2 timesteps ago
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 60), at: now)).to \
       eq(I18n.t('errors.messages.invalid'))
 
-    # Not allowed to use code from the future
+    # Rejects codes from the future
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now)).to \
       eq(I18n.t('errors.messages.invalid'))
 
-    # Increment the failed attempt counter on each failure
+    # Increments the failed attempt counter on each failure
     expect(user.reload.otp_failed_attempts).to eq(2)
 
-    # When ignore_failed: true, it should still return an error
+    # When ignore_failed: true, rejects invalid code
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now, ignore_failed: true)).to \
       eq(I18n.t('errors.messages.invalid'))
 
-    # When ignore_failed: true, it shouldn't increment the failed attempts counter
+    # When ignore_failed: true, keeps unchanged the failed attempts counter
     expect(user.reload.otp_failed_attempts).to eq(2)
 
-    # Do not allow codes that aren't 6 digits
+    # Rejects codes that aren't 6 digits
     expect(OtpService.attempt_otp(user: user, otp_attempt: '!123456', at: now)).to \
       eq(I18n.t('errors.messages.invalid'))
 
-    # Do not increment the failed attempt counter for codes that aren't 6 digits
+    # Keeps unchange the failed attempt counter for codes that aren't 6 digits
     expect(user.reload.otp_failed_attempts).to eq(2)
 
-    # Not allowed when number of attempts exceeded, even if correct
+    # Rejects valid code when number of attempts exceeded
     user.update!(otp_failed_attempts: 999, otp_consumed_timestep: nil)
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now)).to \
       eq(I18n.t('auth.too_many_failed_attempts'))
 
-    # When ignore_failed: true, it should succeed despite exceeding the failed attempts
+    # When ignore_failed: true, ignores failed attempts counter
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now), at: now, ignore_failed: true)).to eq(:success)
 
-    # When ignore_failed: true, it should still set the failed attempts to 0 on success
+    # When ignore_failed: true, resets failed attempts to 0 on success
     expect(user.reload.otp_failed_attempts).to eq(0)
   end
 
@@ -95,40 +95,40 @@ RSpec.describe OtpService do
                         otp_failed_backup_code_attempts: 3, otp_grace_period_started_at: 1.day.ago)
     codes = OtpService.generate_backup_codes(user: user)
 
-    # Should succeed with an unused valid code, ignoring whitespace
+    # Accepts an unused valid code, ignoring whitespace
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: "#{codes.first} ")).to \
       eq(:success)
 
-    # Reset failed attempts counters on successful login
+    # Resets failed attempts counters on successful login
     expect(user.reload.otp_failed_attempts).to eq(0)
     expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
 
-    # Reset grace period on successful login
+    # Resets grace period on successful login
     expect(user.otp_grace_period_started_at).to eq(nil)
 
-    # Should fail when trying to reuse a code
+    # Rejects reused codes
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.first)).to \
       eq(I18n.t('auth.backup_code_sessions.backup_code_already_used_error'))
 
-    # Do not increment failed attempts counter when attempting to reuse code
+    # Keeps unchanged failed attempts counter when attempting to reuse code
     expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
 
-    # Not allowed to use invalid code
+    # Rejects invalid codes
     invalid_code = ('00000000'..'99999999').find { |code| !code.in?(codes) }
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: invalid_code)).to \
       eq(I18n.t('errors.messages.invalid'))
 
-    # Increment the failed attempt counter on failure
+    # Increments failed attempt counter on failure
     expect(user.reload.otp_failed_backup_code_attempts).to eq(1)
 
-    # Do not match used codes as stored in DB, nor codes that aren't 8 digits
+    # Rejects codes that aren't 8 digits, rejects used codes as stored in DB
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: "!#{codes.first}")).to \
       eq(I18n.t('errors.messages.invalid'))
 
-    # Do not increment the failed attempt counter for codes that aren't 8 digits
+    # Keeps unchanged the failed attempt counter for codes that aren't 8 digits
     expect(user.reload.otp_failed_backup_code_attempts).to eq(1)
 
-    # Not allowed when number of attempts exceeded, even if correct
+    # Rejects valid code when number of attempts exceeded
     user.update!(otp_failed_backup_code_attempts: 999)
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.last)).to \
       eq(I18n.t('auth.too_many_failed_attempts'))
@@ -138,16 +138,16 @@ RSpec.describe OtpService do
     user = User.create!(email: 'test@test.com', password: 'secret')
     OtpService.generate_otp_secret(user: user)
 
-    # Should change each time
+    # Generates a new secret each time
     expect(user.otp_secret).not_to eq(OtpService.generate_otp_secret(user: user))
 
-    # Should match format
+    # Generates a secret in correct length and format
     expect(user.otp_secret).to match(/^[a-z0-9]{32}$/)
 
-    # Should update otp_updated_at
+    # Updates otp_updated_at
     expect(user.otp_updated_at).to be_within(1.second).of(Time.now.utc)
 
-    # Should be stored encrypted
+    # Stores secret encrypted
     expect(user.encrypted_attributes.keys).to include(:otp_secret)
   end
 
@@ -155,19 +155,19 @@ RSpec.describe OtpService do
     user = User.create!(email: 'test@test.com', password: 'secret')
     OtpService.generate_backup_codes(user: user)
 
-    # Should change each time
+    # Generate new backup codes each time
     expect(user.otp_backup_codes).not_to eq(OtpService.generate_backup_codes(user: user))
 
-    # Should be an 8 digits number
+    # Generates 8 digits codes
     expect(user.otp_backup_codes.first).to match(/^\d{8}$/)
 
-    # Should be 10 unique numbers
+    # Generates 10 unique codes
     expect(user.otp_backup_codes.uniq.count).to eq(10)
 
-    # Should update otp_backup_codes_updated_at
+    # Updates otp_backup_codes_updated_at
     expect(user.otp_backup_codes_updated_at).to be_within(1.second).of(Time.now.utc)
 
-    # Should be stored encrypted
+    # Stores codes encrypted
     expect(user.encrypted_attributes.keys).to include(:otp_backup_codes)
   end
 
@@ -175,10 +175,10 @@ RSpec.describe OtpService do
     user = User.create!(email: 'test@test.com', password: 'secret')
     codes = OtpService.generate_backup_codes(user: user)
 
-    # Should return 10 codes for newly generated backup codes
+    # Returns 10 available codes after generating new backup codes
     expect(OtpService.backup_codes_available(user: user)).to eq(10)
 
-    # Should return 9 codes after a code has been used
+    # Returns 9 available codes after using a code
     OtpService.attempt_backup_code(user: user, backup_code_attempt: codes.first)
     expect(OtpService.backup_codes_available(user: user)).to eq(9)
   end
@@ -188,7 +188,7 @@ RSpec.describe OtpService do
     expect(OtpService.format_otp_secret('lgdod5kkcwdjwhjcx5u6ecv2vwtfpx54')).to \
       eq('lgdo d5kk cwdj whjc x5u6 ecv2 vwtf px54')
 
-    # Handles nil
+    # Returns invalid message when nil
     expect(OtpService.format_backup_code(nil)).to eq(I18n.t('errors.messages.invalid'))
   end
 
@@ -199,7 +199,7 @@ RSpec.describe OtpService do
     # Returns "already used" message for used codes
     expect(OtpService.format_backup_code('!12345678')).to eq(I18n.t('auth.backup_codes.already_used'))
 
-    # Handles nil
+    # Returns invalid message when nil
     expect(OtpService.format_backup_code(nil)).to eq(I18n.t('errors.messages.invalid'))
   end
 end
