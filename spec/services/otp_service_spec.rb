@@ -112,7 +112,7 @@ RSpec.describe OtpService do
     expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
 
     # Not allowed to use invalid code
-    invalid_code = %w[00000000 11111111 22222222 33333333].find { |code| !code.in?(codes) }
+    invalid_code = ('00000000'..'99999999').find { |code| !code.in?(codes) }
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: invalid_code)).to \
       eq(I18n.t('errors.messages.invalid'))
 
