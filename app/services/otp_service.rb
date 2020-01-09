@@ -2,7 +2,8 @@
 
 class OtpService
   ISSUER = 'OTPExample'
-  DRIFT = 30.seconds
+  DRIFT_BEHIND = 30.seconds
+  DRIFT_AHEAD = 0.seconds
   MAX_FAILED_OTP_ATTEMPTS = 12
   MAX_FAILED_BACKUP_CODE_ATTEMPTS = 12
   WARN_OTP_ATTEMPTS_LEFT = 9
@@ -27,16 +28,15 @@ class OtpService
 
   def self.attempt_otp(user:, otp_attempt:, ignore_failed: false, at: Time.now.utc)
     otp_attempt = otp_attempt.remove(/\s+/)
-    unless otp_attempt.match?(/\A\d{6}\z/)
-      return I18n.t('errors.messages.invalid')
-    end
+    return I18n.t('errors.messages.invalid') unless otp_attempt.match?(/\A\d{6}\z/)
 
     if user.otp_failed_attempts >= MAX_FAILED_OTP_ATTEMPTS && !ignore_failed
       return I18n.t('auth.too_many_failed_attempts')
     end
 
     otp = ROTP::TOTP.new(user.otp_secret)
-    matching_timestep = otp.verify(otp_attempt, at: at, drift_behind: DRIFT)&.div(otp.interval)
+    matching_timestamp = otp.verify(otp_attempt, at: at, drift_behind: DRIFT_BEHIND, drift_ahead: DRIFT_AHEAD)
+    matching_timestep = matching_timestamp&.div(otp.interval)
     unless matching_timestep
       user.class.increment_counter(:otp_failed_attempts, user.id) unless ignore_failed
       return I18n.t('errors.messages.invalid')
@@ -53,9 +53,7 @@ class OtpService
 
   def self.attempt_backup_code(user:, backup_code_attempt:)
     backup_code_attempt = backup_code_attempt.remove(/\s+/)
-    unless backup_code_attempt.match?(/\A\d{8}\z/)
-      return I18n.t('errors.messages.invalid')
-    end
+    return I18n.t('errors.messages.invalid') unless backup_code_attempt.match?(/\A\d{8}\z/)
 
     if user.otp_failed_backup_code_attempts >= MAX_FAILED_BACKUP_CODE_ATTEMPTS
       return I18n.t('auth.too_many_failed_attempts')
