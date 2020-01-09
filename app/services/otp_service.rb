@@ -10,8 +10,6 @@ class OtpService
   BACKUP_CODES_COUNT = 10
   BACKUP_CODE_LENGTH = 8
   MIN_QR_CODE_SIZE = 8
-  REQUIRE_2FA = true
-  GRACE_PERIOD = 1.day
 
   # Generate a QR code with the maximum error correction that fits a fixed size
   # Size 8 should be enough to accomodate a 32 character issuer and a 64 character email
@@ -117,7 +115,7 @@ class OtpService
 
   def self.check_enforcement_status(user:)
     return :already_enabled if user.otp_required_for_login?
-    return :not_enforced unless OtpService::REQUIRE_2FA
+    return :not_enforced unless Rails.application.secrets.otp_enforced
 
     user.update!(otp_grace_period_started_at: Time.now.utc) if user.otp_grace_period_started_at.blank?
     return :enforced if Time.now.utc >= enforcement_deadline(user: user)
@@ -125,7 +123,7 @@ class OtpService
     :grace_period
   end
 
-  def self.enforcement_deadline(user:, grace_period: OtpService::GRACE_PERIOD)
-    user.otp_grace_period_started_at + grace_period
+  def self.enforcement_deadline(user:)
+    user.otp_grace_period_started_at + Rails.application.secrets.otp_grace_period_days.days
   end
 end
