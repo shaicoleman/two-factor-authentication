@@ -15,6 +15,7 @@ class Auth::TwoFactorsController < ApplicationController
   end
 
   def create
+    @otp_secret = OtpService.format_otp_secret(current_user.otp_secret)
     @otp_form = OtpForm.new(otp_form_params)
     @qr_code = OtpService.otp_qr_code(issuer: Rails.application.secrets.otp_issuer, user: current_user)
     return render :new unless @otp_form.valid?
