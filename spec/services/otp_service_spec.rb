@@ -203,7 +203,7 @@ RSpec.describe OtpService do
 
   it '#format_backup_codes' do
     # Formats number in groups of 4 digits
-    expect(OtpService.format_backup_codes(['12345678', '23456789'])).to eq(['1234 5678', '2345 6789'])
+    expect(OtpService.format_backup_codes(%w[12345678 23456789])).to eq(['1234 5678', '2345 6789'])
 
     # Returns "already used" message for used codes
     expect(OtpService.format_backup_codes(['!12345678'])).to eq([I18n.t('auth.backup_codes.already_used')])
@@ -217,5 +217,34 @@ RSpec.describe OtpService do
 
     # Returns :already_enabled when 2FA is already enabled
     expect(OtpService.check_enforcement_status(user: user)).to eq(:already_enabled)
+
+    # Returns :not_enforced when 2FA is not enforced
+    Rails.application.secrets.otp_enforced = false
+    user.update!(otp_required_for_login: false)
+    expect(OtpService.check_enforcement_status(user: user)).to eq(:not_enforced)
+
+    # Starts grace period when otp_grace_period_started_at is nil
+    Rails.application.secrets.otp_enforced = true
+    Rails.application.secrets.otp_grace_period_days = 1
+    user.update!(otp_grace_period_started_at: nil)
+    expect(OtpService.check_enforcement_status(user: user)).to eq(:grace_period)
+    expect(user.otp_grace_period_started_at).to be_within(1.second).of(Time.now.utc)
+
+    # Within grace period returns :grace_period
+    user.update!(otp_grace_period_started_at: 23.hours.ago.utc)
+    expect(OtpService.check_enforcement_status(user: user)).to eq(:grace_period)
+
+    # When grace period expired returns :enforced
+    user.update!(otp_grace_period_started_at: 25.hours.ago.utc)
+    expect(OtpService.check_enforcement_status(user: user)).to eq(:enforced)
+  end
+
+  it '#enforcement_deadline' do
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_required_for_login: false,
+                        otp_grace_period_started_at: 2.days.ago)
+    Rails.application.secrets.otp_grace_period_days = 3
+
+    # Grace period deadline adds the grace period to otp_grace_period_started_at
+    expect(OtpService.enforcement_deadline(user: user)).to be_within(1.second).of(1.day.from_now)
   end
 end
