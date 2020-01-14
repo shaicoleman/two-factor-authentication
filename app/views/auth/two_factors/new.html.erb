@@ -52,7 +52,9 @@
           <%= f.submit I18n.t('auth.two_factors.enable_2fa'), class: "btn btn-primary btn-block btn-lg" %>
         </div>
 
-        <%= link_to "Back", :edit_user_registration, class: "btn btn-primary" %>
+        <% unless @enforcement_status == :enforced %>
+          <%= link_to "Back", :edit_user_registration, class: "btn btn-primary" %>
+        <% end %>
       <% end %>
     </div>
   </div>
