@@ -14,7 +14,6 @@ class Users::SessionsController < Devise::SessionsController
       session[:otp_user_id] = otp_user_id
       redirect_to(:new_auth_otp_session)
     else
-      set_flash_message!(:notice, :signed_in)
       respond_with resource, location: after_sign_in_path_for(resource)
     end
   end

@@ -31,7 +31,7 @@ class Auth::BackupCodeSessionsController < ApplicationController
 
     sign_out
     sign_in(User, user)
-    redirect_to after_sign_in_path_for(user), notice: I18n.t('devise.sessions.signed_in')
+    redirect_to after_sign_in_path_for(user)
   end
 
   private
