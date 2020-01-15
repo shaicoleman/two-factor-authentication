@@ -109,7 +109,7 @@ class OtpService
   end
 
   def self.check_enforcement_status(user:)
-    return :already_enabled if user.otp_required_for_login?
+    return :already_enabled if user.otp_required_for_login
     return :not_enforced unless Rails.application.secrets.otp_enforced
 
     user.update!(otp_grace_period_started_at: Time.now.utc) if user.otp_grace_period_started_at.blank?
