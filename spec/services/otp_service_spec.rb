@@ -17,9 +17,6 @@ RSpec.describe OtpService do
     # Generates QR code as SVG
     svg = result.as_svg(module_size: 4)
     expect(svg).to include('<svg')
-
-    # Generates a fixed size QR code, regardless of the email length
-    expect(svg).to include('width="196" height="196"')
   end
 
   it '#attempt_otp' do
