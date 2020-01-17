@@ -37,6 +37,6 @@ class Auth::OtpSessionsController < ApplicationController
   private
 
   def otp_form_params
-    params[:otp_form].permit(:otp_attempt)
+    params[:otp_form].permit(:otp_attempt, :remember_me)
   end
 end

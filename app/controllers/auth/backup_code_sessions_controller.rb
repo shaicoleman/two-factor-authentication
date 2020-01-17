@@ -37,6 +37,6 @@ class Auth::BackupCodeSessionsController < ApplicationController
   private
 
   def backup_code_form_params
-    params[:backup_code_form].permit(:backup_code_attempt)
+    params[:backup_code_form].permit(:backup_code_attempt, :remember_me)
   end
 end
