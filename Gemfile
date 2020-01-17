@@ -58,7 +58,6 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'bootstrap'
 gem 'devise', '< 5'
 gem 'devise-bootstrapped', github: 'excid3/devise-bootstrapped', branch: 'bootstrap4'
-gem 'devise_masquerade'
 gem 'font-awesome-sass'
 gem 'jquery-rails'
 gem 'webpacker'
