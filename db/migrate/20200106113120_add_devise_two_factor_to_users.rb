@@ -11,7 +11,6 @@ class AddDeviseTwoFactorToUsers < ActiveRecord::Migration[5.2]
     add_column :users, :otp_consumed_timestep, :integer
     add_column :users, :otp_required_for_login, :boolean
     add_column :users, :otp_updated_at, :datetime
-    add_column :users, :password_changed_at, :datetime
 
     add_column :users, :otp_backup_codes_updated_at, :datetime
     add_column :users, :otp_grace_period_started_at, :datetime

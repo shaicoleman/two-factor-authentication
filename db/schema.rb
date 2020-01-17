@@ -58,7 +58,6 @@ ActiveRecord::Schema.define(version: 2020_01_06_113120) do
     t.integer "otp_consumed_timestep"
     t.boolean "otp_required_for_login"
     t.datetime "otp_updated_at"
-    t.datetime "password_changed_at"
     t.datetime "otp_backup_codes_updated_at"
     t.datetime "otp_grace_period_started_at"
     t.integer "otp_failed_attempts", default: 0, null: false
