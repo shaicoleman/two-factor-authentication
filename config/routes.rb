@@ -18,15 +18,6 @@ Rails.application.routes.draw do
     get '/backup_code_sessions', to: redirect('/auth/backup_code_sessions/new')
   end
 
-  # Admin
-  namespace :admin do
-    resources :users
-    resources :announcements
-    resources :notifications
-
-    root to: 'users#index'
-  end
-
   # Main app routes
   resources :notifications, only: [:index]
   resources :announcements, only: [:index]
