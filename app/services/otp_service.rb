@@ -82,6 +82,14 @@ class OtpService
     codes
   end
 
+  def self.enable_otp(user:)
+    user.update!(otp_required_for_login: true, otp_updated_at: Time.now.utc)
+  end
+
+  def self.disable_otp(user:)
+    user.update!(otp_required_for_login: false, otp_secret: nil, otp_consumed_timestep: nil, otp_updated_at: Time.now.utc)
+  end
+
   def self.otp_attempts_remaining(user:)
     attempts_remaining = MAX_FAILED_OTP_ATTEMPTS - user.reload.otp_failed_attempts
     I18n.t('auth.attempts_remaining', count: attempts_remaining) if attempts_remaining <= WARN_OTP_ATTEMPTS_LEFT

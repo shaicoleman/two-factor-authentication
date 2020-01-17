@@ -25,7 +25,7 @@ class Auth::TwoFactorsController < ApplicationController
       @otp_form.errors.add(:otp_attempt, response)
       return render :new
     end
-    current_user.update!(otp_required_for_login: true, otp_updated_at: Time.now.utc)
+    OtpService.enable_otp(user: current_user)
     session.delete(:otp_enforcement)
     redirect_to :auth_backup_codes
   end
@@ -37,7 +37,7 @@ class Auth::TwoFactorsController < ApplicationController
   end
 
   def destroy
-    current_user.update!(otp_required_for_login: false, otp_secret: nil, otp_consumed_timestep: nil, otp_updated_at: Time.now.utc)
+    OtpService.disable_otp(user: current_user)
     session.delete(:otp_enforcement)
     redirect_to :edit_user_registration
   end

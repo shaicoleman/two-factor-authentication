@@ -247,4 +247,24 @@ RSpec.describe OtpService do
     # Grace period deadline adds the grace period to otp_grace_period_started_at
     expect(OtpService.enforcement_deadline(user: user)).to be_within(1.second).of(1.day.from_now)
   end
+
+  it '#enable_otp' do
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_required_for_login: false,
+                        otp_updated_at: 1.day.ago.utc)
+
+    OtpService.enable_otp(user: user)
+    expect(user.otp_required_for_login).to eq(true)
+    expect(user.otp_updated_at).to be_within(1.second).of(Time.now.utc)
+  end
+
+  it '#disable_otp' do
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_required_for_login: true,
+                        otp_secret: 'test', otp_consumed_timestep: 12345, otp_updated_at: 1.day.ago.utc)
+
+    OtpService.disable_otp(user: user)
+    expect(user.otp_required_for_login).to eq(false)
+    expect(user.otp_secret).to eq(nil)
+    expect(user.otp_consumed_timestep).to eq(nil)
+    expect(user.otp_updated_at).to be_within(1.second).of(Time.now.utc)
+  end
 end
