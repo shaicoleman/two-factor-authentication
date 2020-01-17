@@ -47,6 +47,9 @@ RSpec.describe OtpService do
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 30), at: now)).to \
       eq(I18n.t('auth.otp_sessions.otp_code_already_used_error'))
 
+    # Accepts a code from the next timestep, ignoring whitespace
+    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now)).to eq(:success)
+
     # Keeps unchanged failed attempts counter when attempting to reuse code
     expect(user.reload.otp_failed_attempts).to eq(0)
 
@@ -54,15 +57,15 @@ RSpec.describe OtpService do
     expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now - 60), at: now)).to \
       eq(I18n.t('errors.messages.invalid'))
 
-    # Rejects codes from the future
-    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now)).to \
+    # Rejects codes from 2 timesteps into the future
+    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 60), at: now)).to \
       eq(I18n.t('errors.messages.invalid'))
 
     # Increments the failed attempt counter on each failure
     expect(user.reload.otp_failed_attempts).to eq(2)
 
     # When ignore_failed: true, rejects invalid code
-    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 30), at: now, ignore_failed: true)).to \
+    expect(OtpService.attempt_otp(user: user, otp_attempt: totp.at(now + 90), at: now, ignore_failed: true)).to \
       eq(I18n.t('errors.messages.invalid'))
 
     # When ignore_failed: true, keeps unchanged the failed attempts counter
