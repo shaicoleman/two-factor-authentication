@@ -63,7 +63,7 @@ gem 'devise_masquerade'
 gem 'font-awesome-sass'
 gem 'jquery-rails'
 gem 'webpacker'
-gem 'rspec-rails', '4.0.0.beta3'
+gem 'rspec-rails', '4.0.0.beta4'
 
 gem 'attr_encrypted'
 gem 'rotp'
