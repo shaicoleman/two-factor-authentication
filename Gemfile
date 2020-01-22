@@ -63,7 +63,7 @@ gem 'jquery-rails'
 gem 'webpacker'
 gem 'rspec-rails', '4.0.0.beta4'
 
-gem 'attr_encrypted'
+gem 'lockbox'
 gem 'rotp'
 gem 'rqrcode'
 

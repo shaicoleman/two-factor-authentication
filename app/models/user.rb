@@ -8,7 +8,6 @@ class User < ApplicationRecord
   has_many :notifications, foreign_key: :recipient_id
   has_many :services
 
-  attr_encrypted :otp_secret,       key: Digest::SHA256.digest(Rails.application.secrets.encryption_key)
-  attr_encrypted :otp_backup_codes, key: Digest::SHA256.digest(Rails.application.secrets.encryption_key),
-                                    marshal: true, marshaler: JSON
+  encrypts :otp_secret,       key: Rails.application.secrets.encryption_key
+  encrypts :otp_backup_codes, key: Rails.application.secrets.encryption_key, type: :json
 end

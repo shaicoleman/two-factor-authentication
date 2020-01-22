@@ -51,10 +51,8 @@ ActiveRecord::Schema.define(version: 2020_01_06_113120) do
     t.boolean "admin", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "encrypted_otp_secret"
-    t.string "encrypted_otp_secret_iv"
-    t.string "encrypted_otp_backup_codes"
-    t.string "encrypted_otp_backup_codes_iv"
+    t.string "otp_secret_ciphertext"
+    t.string "otp_backup_codes_ciphertext"
     t.integer "otp_consumed_timestep"
     t.boolean "otp_required_for_login"
     t.datetime "otp_updated_at"

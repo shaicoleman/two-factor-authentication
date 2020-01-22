@@ -165,7 +165,7 @@ RSpec.describe OtpService do
     expect(user.otp_updated_at).to be_within(1.second).of(Time.now.utc)
 
     # Stores secret encrypted
-    expect(user.encrypted_attributes.keys).to include(:otp_secret)
+    expect(user.otp_secret_ciphertext).to be_present
   end
 
   it '#generate_backup_codes' do
@@ -186,7 +186,7 @@ RSpec.describe OtpService do
     expect(user.otp_backup_codes_updated_at).to be_within(1.second).of(Time.now.utc)
 
     # Stores codes encrypted
-    expect(user.encrypted_attributes.keys).to include(:otp_backup_codes)
+    expect(user.otp_backup_codes_ciphertext).to be_present
   end
 
   it '#backup_codes_available' do

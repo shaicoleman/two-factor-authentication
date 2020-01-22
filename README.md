@@ -3,7 +3,7 @@
 This is an example of a production ready 2FA example app, inspired by the `devise-two-factor` gem.
 
 * Allows to log in with OTP or via backup codes
-* Stores the backup codes and the OTP secrets encrypted in the DB
+* Stores the backup codes and the OTP secrets encrypted in the DB via the `lockbox` gem
 * Prevents brute force attempts of OTP codes and backup codes
 * Ensures correct OTP setup, by requiring users to enter an OTP code
 * Option to enforce 2FA enrollment, with a grace period
