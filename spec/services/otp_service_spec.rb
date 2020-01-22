@@ -142,6 +142,15 @@ RSpec.describe OtpService do
     expect(OtpService.attempt_backup_code(user: user, backup_code_attempt: '')).to eq(I18n.t('errors.messages.invalid'))
   end
 
+  it '#reset_attempts' do
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_failed_attempts: 3,
+                        otp_failed_backup_code_attempts: 3)
+    OtpService.reset_attempts(user: user)
+
+    expect(user.reload.otp_failed_attempts).to eq(0)
+    expect(user.reload.otp_failed_backup_code_attempts).to eq(0)
+  end
+
   it '#generate_otp_secret' do
     user = User.create!(email: 'test@test.com', password: 'secret')
     OtpService.generate_otp_secret(user: user)

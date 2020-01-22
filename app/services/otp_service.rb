@@ -66,6 +66,10 @@ class OtpService
     :success
   end
 
+  def self.reset_attempts(user:)
+    user.update!(otp_failed_attempts: 0, otp_failed_backup_code_attempts: 0)
+  end
+
   def self.generate_otp_secret(user:)
     otp_secret = ROTP::Base32.random.downcase
     user.update!(otp_secret: otp_secret, otp_updated_at: Time.now.utc)
