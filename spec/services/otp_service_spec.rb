@@ -152,11 +152,14 @@ RSpec.describe OtpService do
   end
 
   it '#generate_otp_secret' do
-    user = User.create!(email: 'test@test.com', password: 'secret')
-    OtpService.generate_otp_secret(user: user)
+    user = User.create!(email: 'test@test.com', password: 'secret', otp_required_for_login: false)
+    otp_secret_1 = OtpService.generate_otp_secret(user: user)
+    expect(user.otp_secret).to eq(otp_secret_1)
 
     # Generates a new secret each time
-    expect(user.otp_secret).not_to eq(OtpService.generate_otp_secret(user: user))
+    otp_secret_2 = OtpService.generate_otp_secret(user: user)
+    expect(user.otp_secret).to eq(otp_secret_2)
+    expect(otp_secret_1).not_to eq(otp_secret_2)
 
     # Generates a secret in correct length and format
     expect(user.otp_secret).to match(/^[a-z0-9]{32}$/)
@@ -166,6 +169,12 @@ RSpec.describe OtpService do
 
     # Stores secret encrypted
     expect(user.otp_secret_ciphertext).to be_present
+
+    # Returns an error and does not update secret if 2FA is already enabled
+    user.update!(otp_required_for_login: true)
+    response = OtpService.generate_otp_secret(user: user)
+    expect(response).to eq(:already_enabled)
+    expect(user.otp_secret).to eq(otp_secret_2)
   end
 
   it '#generate_backup_codes' do

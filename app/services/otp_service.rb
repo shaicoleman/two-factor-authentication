@@ -71,6 +71,8 @@ class OtpService
   end
 
   def self.generate_otp_secret(user:)
+    return :already_enabled if user.otp_required_for_login
+
     otp_secret = ROTP::Base32.random.downcase
     user.update!(otp_secret: otp_secret, otp_updated_at: Time.now.utc)
     otp_secret
